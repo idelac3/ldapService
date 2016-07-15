@@ -1,0 +1,65 @@
+dn: dc=padl,dc=com
+dc: padl
+objectClass: top
+objectClass: domain
+
+dn: ou=Rpc,dc=padl,dc=com
+ou: Rpc
+objectClass: top
+objectClass: organizationalUnit
+
+dn: nisMapName=netgroup.byuser,dc=padl,dc=com
+nismapname: netgroup.byuser
+objectClass: top
+objectClass: nisMap
+
+dn: ou=Hosts,dc=padl,dc=com
+ou: Hosts
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=Aliases,dc=padl,dc=com
+ou: Aliases
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=Mounts,dc=padl,dc=com
+ou: Mounts
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=Networks,dc=padl,dc=com
+ou: Networks
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=Protocols,dc=padl,dc=com
+ou: Protocols
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=People,dc=padl,dc=com
+ou: People
+objectClass: top
+objectClass: organizationalUnit
+
+dn: nisMapName=netgroup.byhost,dc=padl,dc=com
+nismapname: netgroup.byhost
+objectClass: top
+objectClass: nisMap
+
+dn: ou=Netgroup,dc=padl,dc=com
+ou: Netgroup
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=Services,dc=padl,dc=com
+ou: Services
+objectClass: top
+objectClass: organizationalUnit
+
+dn: ou=Group,dc=padl,dc=com
+ou: Group
+objectClass: top
+objectClass: organizationalUnit
+

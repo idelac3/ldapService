@@ -1,0 +1,253 @@
+dn: cn=localhost,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 127.0.0.1
+cn: localhost
+
+dn: cn=eclipseVM,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 127.0.1.1
+cn: eclipseVM
+
+dn: cn=cpbc1.etk.extern.eu.ericsson.se,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.17.64.132
+cn: cpbc1.etk.extern.eu.ericsson.se
+
+dn: cn=ip6-localhost,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: ::1
+cn: ip6-localhost
+cn: ip6-loopback
+
+dn: cn=ip6-localnet,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: fe00::0
+cn: ip6-localnet
+
+dn: cn=ip6-mcastprefix,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: ff00::0
+cn: ip6-mcastprefix
+
+dn: cn=ip6-allnodes,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: ff02::1
+cn: ip6-allnodes
+
+dn: cn=ip6-allrouters,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: ff02::2
+cn: ip6-allrouters
+
+dn: cn=ubuntupc,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.32.150
+cn: ubuntupc
+
+dn: cn=dvr,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 192.168.5.100
+cn: dvr
+
+dn: cn=tgc.zur6,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.50.2
+cn: tgc.zur6
+
+dn: cn=mgw1.zur6,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.50.10
+cn: mgw1.zur6
+
+dn: cn=mgw2.zur6,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.50.18
+cn: mgw2.zur6
+
+dn: cn=mgw3.zur6,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.50.26
+cn: mgw3.zur6
+
+dn: cn=mgw4.zur6,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.50.34
+cn: mgw4.zur6
+
+dn: cn=mgw5.zur6,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.50.42
+cn: mgw5.zur6
+
+dn: cn=mgw6.zur6,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.50.50
+cn: mgw6.zur6
+
+dn: cn=mgw7.zur6,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.50.58
+cn: mgw7.zur6
+
+dn: cn=mgw8.zur6,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.50.66
+cn: mgw8.zur6
+
+dn: cn=axe.zur6,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.32.120
+cn: axe.zur6
+
+dn: cn=tgc-test,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.50.130
+cn: tgc-test
+
+dn: cn=mgw1-test,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.50.138
+cn: mgw1-test
+
+dn: cn=tgc.zur7,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.50.146
+cn: tgc.zur7
+
+dn: cn=mgw1.zur7,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.50.154
+cn: mgw1.zur7
+
+dn: cn=mgw2.zur7,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.50.162
+cn: mgw2.zur7
+
+dn: cn=mgw3.zur7,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.50.170
+cn: mgw3.zur7
+
+dn: cn=mgw4.zur7,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.50.178
+cn: mgw4.zur7
+
+dn: cn=mgw5.zur7,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.50.186
+cn: mgw5.zur7
+
+dn: cn=mgw6.zur7,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.50.194
+cn: mgw6.zur7
+
+dn: cn=mgw7.zur7,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.50.202
+cn: mgw7.zur7
+
+dn: cn=mgw8.zur7,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.50.210
+cn: mgw8.zur7
+
+dn: cn=axe.zur7,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.32.117
+cn: axe.zur7
+
+dn: cn=router1,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.34.41
+cn: router1
+
+dn: cn=router2,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.34.42
+cn: router2
+
+dn: cn=zhtrust01,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.48.230
+cn: zhtrust01
+
+dn: cn=zhtrust02,ou=Hosts,dc=padl,dc=com
+objectClass: top
+objectClass: ipHost
+objectClass: device
+ipHostNumber: 172.25.48.231
+cn: zhtrust02
+

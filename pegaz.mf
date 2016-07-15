@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: hr.ericsson.pegasus.Pegasus
+SplashScreen-Image: hr/ericsson/pegasus/logo/logo.gif
+Class-Path: lib/unboundid-ldapsdk-se.jar lib/netty-all-5.0.0.Alpha1.jar
