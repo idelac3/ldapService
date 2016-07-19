@@ -1,0 +1,159 @@
+{
+    "_id": "dzM4iMYdM729sBsEb",
+    "createdAt": {
+        "$date": "2016-03-03T16:34:49.104Z"
+    },
+    "services": {
+        "email": {
+            "verificationTokens": []
+        },
+        "password": {
+            "bcrypt": "$2a$10$yJCYosqIb4WRyW9y97kCleN2oj9OIy599NvEiqjKLF9E0wGmDg./y"
+        },
+        "resume": {
+            "loginTokens": [
+                {
+                    "when": {
+                        "$date": "2016-04-21T19:08:03.349Z"
+                    },
+                    "hashedToken": "o8P6wCruAW3y3ldk7nifKN9mGp6z8ldTEUhIahLNYL0="
+                },
+                {
+                    "when": {
+                        "$date": "2016-04-25T06:04:55.214Z"
+                    },
+                    "hashedToken": "CnKA56GMw3pKR8efzo6M10S3ZK7KwhIFD9IMau0vMfs="
+                },
+                {
+                    "when": {
+                        "$date": "2016-05-02T22:54:29.635Z"
+                    },
+                    "hashedToken": "6EoUisULZrLwTgzPfFOZh4m+AZaV32hC1e+JlSFBp74="
+                },
+                {
+                    "when": {
+                        "$date": "2016-05-08T03:33:58.197Z"
+                    },
+                    "hashedToken": "tDrMOVcP37y/v0Y+MHMiVLC6U6ox9kN+2Gh5/A9CzJM="
+                },
+                {
+                    "when": {
+                        "$date": "2016-05-12T19:04:39.617Z"
+                    },
+                    "hashedToken": "wOHzPHsV7cDVfs8ezHfx3wtkAmfdmCAeFXUn8W0ZbAU="
+                },
+                {
+                    "when": {
+                        "$date": "2016-05-12T19:55:45.923Z"
+                    },
+                    "hashedToken": "mChaxmqZD/HMl6N2PaqSEXQLZ9umbDzxBwmN51E79CQ="
+                },
+                {
+                    "when": {
+                        "$date": "2016-05-16T04:05:52.237Z"
+                    },
+                    "hashedToken": "u2zfpx4GiNyeFdAMRCV9pHZ5gfzm0SS/drdlXmnrNEo="
+                },
+                {
+                    "when": {
+                        "$date": "2016-05-16T18:16:25.423Z"
+                    },
+                    "hashedToken": "mzq2EqdlPEfrUvmi79lnjPgOGWV/xkyGMTlNssShyGs="
+                },
+                {
+                    "when": {
+                        "$date": "2016-05-16T20:15:31.413Z"
+                    },
+                    "hashedToken": "szzavuR/3JNhC2ezwX9s+mpYzYWn+0uxh4OCENbfTsw="
+                },
+                {
+                    "when": {
+                        "$date": "2016-05-16T20:34:01.241Z"
+                    },
+                    "hashedToken": "tJG+JDoWdWd6AZoukFw4czGijbNHnU1qa3hYAeUo4oI="
+                },
+                {
+                    "when": {
+                        "$date": "2016-05-17T03:13:41.298Z"
+                    },
+                    "hashedToken": "tUOASGcUfJI2WGbFrczMrHEfFWmp1GrTyTQ6AGE5Sck="
+                },
+                {
+                    "when": {
+                        "$date": "2016-05-17T03:30:14.491Z"
+                    },
+                    "hashedToken": "db/+8tey6wx4bMmrO8Wpk2FGsKXwWxGjnZS0JznRsXg="
+                },
+                {
+                    "when": {
+                        "$date": "2016-07-18T13:06:40.925Z"
+                    },
+                    "hashedToken": "u3ltkhC4GMi3oz+L5ILBA8II3LQbIgiCizaxEZ2Q3Gc="
+                },
+                {
+                    "when": {
+                        "$date": "2016-07-19T00:21:35.622Z"
+                    },
+                    "hashedToken": "OYyVuzZYjVwNOM4aikCECQOP1/RWW4/V40xMSVfsZ/Q="
+                },
+                {
+                    "when": {
+                        "$date": "2016-07-19T00:46:20.327Z"
+                    },
+                    "hashedToken": "9SHoto07Qq+3L6ny6W4ZeBzgkpbucVMirzBbhSe+kAo="
+                }
+            ]
+        }
+    },
+    "emails": [
+        {
+            "address": "demo+1J@buildteem.com",
+            "verified": true
+        }
+    ],
+    "profile": {
+        "grades": [
+            "8th"
+        ],
+        "subjects": [
+            "English Language Arts"
+        ],
+        "jobTitle": "Teacher",
+        "phone": "(212) 555-1212",
+        "school_id": "C1",
+        "district_id": "C",
+        "avatar": {
+            "small": "https://s3-us-west-2.amazonaws.com/teem-prod-avatars/avatars/dzM4iMYdM729sBsEb/small/8maajJttfMCQXcQPm-dzM4iMYdM729sBsEb_1468493543299",
+            "medium": "https://s3-us-west-2.amazonaws.com/teem-prod-avatars/avatars/dzM4iMYdM729sBsEb/medium/8maajJttfMCQXcQPm-dzM4iMYdM729sBsEb_1468493543299",
+            "large": "https://s3-us-west-2.amazonaws.com/teem-prod-avatars/avatars/dzM4iMYdM729sBsEb/large/8maajJttfMCQXcQPm-dzM4iMYdM729sBsEb_1468493543299"
+        },
+        "fname": "Nazar",
+        "lname": "Kukarkin"
+    },
+    "roles": {
+        "teem": [
+            "teacher-staff"
+        ]
+    },
+    "status": {
+        "online": true,
+        "lastLogin": {
+            "date": {
+                "$date": "2016-07-19T00:46:21.104Z"
+            },
+            "ipAddr": "10.30.57.189",
+            "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/601.6.17 (KHTML, like Gecko) Version/9.1.1 Safari/601.6.17"
+        },
+        "idle": false
+    },
+    "activity": {
+        "lastActivity": {
+            "$date": "2016-07-19T00:46:37.115Z"
+        },
+        "url": "/im",
+        "data": {
+            "sector": "IM"
+        },
+        "lifeSignal": false
+    }
+}
