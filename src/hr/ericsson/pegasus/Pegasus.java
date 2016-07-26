@@ -840,7 +840,7 @@ public class Pegasus {
 				+ "  --debug                            if set, console will fill up with INFO messages for every ldap request.\n"
 				+ "  --disableLdapFilter                if set, filter in LDAP SEARCH request will be ignored.\n"
 				+ "\n"
-				+ "Author: Igor Delac <igor.delac@ericsson.com>\n"
+				+ "Author: Igor Delac <igor.delac@gmail.com>\n"
 				+ "\n";
 		log(msg);
 	}

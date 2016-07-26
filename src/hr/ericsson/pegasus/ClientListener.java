@@ -71,10 +71,11 @@ public class ClientListener implements Runnable {
     private ChannelPipeline channelPipeline;
     
     /**
-     * Instance of SSL handler for SSL/TLS secure layer. If <I>null</I> then
-     * SSL/TLS is disabled.
+     * Instance of {@link KeyManagerFactory}. For each SSL/TLS connection to LDAP service,
+     * this factory is used to initialize SSL engine and SSL handler instance.
+     * If <I>null</I> then SSL/TLS is disabled.
      */
-    private SslHandler sslHandler;
+    private KeyManagerFactory keyManagerFactory;
     
     /**
      * New ClientListener instance.
@@ -96,7 +97,7 @@ public class ClientListener implements Runnable {
     
         this.threadCount = Runtime.getRuntime().availableProcessors();
 
-        this.sslHandler = null;
+        this.keyManagerFactory = null;
         
        	this.channelHandler = new ChannelInitializer<SocketChannel>() {
             @Override
@@ -108,10 +109,29 @@ public class ClientListener implements Runnable {
             	channelPipeline = ch.pipeline();
             	
             	/*
-            	 * Check for SSL/TLS setting. If SSL handler is present,
-            	 * then add it as first handler for channel pipeline.
+            	 * Check for SSL/TLS setting. If key manager factory is present,
+            	 * then add SSL handler as first handler for channel pipeline.
             	 */
-            	if (sslHandler != null) {
+            	if (keyManagerFactory != null) {
+            		
+            		/*
+            		 * Build SSL context.
+            		 */
+                    SSLContext sslContext = SSLContext.getInstance("TLS");
+                    sslContext.init(keyManagerFactory.getKeyManagers(), null, null);
+
+                    /*
+                     * Build SSL engine for server.
+                     */
+                    SSLEngine sslEngine = sslContext.createSSLEngine();
+                    sslEngine.setUseClientMode(false);
+                    
+                    /*
+                     * Create SSL handler instance. Later it will end up as first handler
+                     * in channel pipeline.
+                     */
+                    SslHandler sslHandler = new SslHandler(sslEngine);
+                    
             		channelPipeline.addFirst(sslHandler);
             	}
             	
@@ -209,29 +229,11 @@ public class ClientListener implements Runnable {
     public void setSSL(KeyStore keyStore) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
 
         /*
-         * Build KeyManager list from KeyStore object.
+         * Build KeyManager factory from KeyStore object.
          */
-		final KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory
+		this.keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory
 				.getDefaultAlgorithm());
-		kmf.init(keyStore, "".toCharArray());
-		
-		/*
-		 * Build SSL context.
-		 */
-        SSLContext sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(kmf.getKeyManagers(), null, null);
-
-        /*
-         * Build SSL engine for server.
-         */
-        SSLEngine sslEngine = sslContext.createSSLEngine();
-        sslEngine.setUseClientMode(false);
-        
-        /*
-         * Create SSL handler instance. Later it will end up as first handler
-         * in channel pipeline.
-         */
-        this.sslHandler = new SslHandler(sslEngine);
+		this.keyManagerFactory.init(keyStore, "".toCharArray());
         
     }
     

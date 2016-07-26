@@ -38,7 +38,7 @@ function create_jar()
  OUTPUT_JAR="pegaz.jar"
  BIN_DIR="bin/"
  cd $BIN_DIR
- /usr/jdk1.6.0_37/bin/jar cmf ../$MANIFEST ../$OUTPUT_JAR hr/
+ /usr/jdk1.8.0_91/bin/jar cmf ../$MANIFEST ../$OUTPUT_JAR hr/
  cd ..
 }
 
