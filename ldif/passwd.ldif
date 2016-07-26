@@ -700,23 +700,6 @@ uidNumber: 123
 gidNumber: 131
 homeDirectory: /var/run/openntpd
 
-dn: uid=igor,ou=People,dc=padl,dc=com
-uid: igor
-cn: igor
-objectClass: account
-objectClass: posixAccount
-objectClass: top
-objectClass: shadowAccount
-userPassword: {crypt}$6$.wvEfVjA$1U5wa0mK7ikX2Cj4ksLm1K/wE9B.tg7T30XFBoeYgW8TRBpmzLDfciCk0zI0ij/iXuZ92Z2uvj7.T6ZRx59.Q1
-shadowLastChange: 16722
-shadowMax: 99999
-shadowWarning: 7
-loginShell: /bin/bash
-uidNumber: 1000
-gidNumber: 1000
-homeDirectory: /home/igor
-gecos: igor,,,
-
 dn: uid=siproxd,ou=People,dc=padl,dc=com
 uid: siproxd
 cn: siproxd
