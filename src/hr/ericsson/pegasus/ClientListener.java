@@ -1,5 +1,15 @@
 package hr.ericsson.pegasus;
 
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
+
 import hr.ericsson.pegasus.encoders.MessageDecoder;
 import hr.ericsson.pegasus.encoders.MessageEncoder;
 import hr.ericsson.pegasus.handler.MessageHandler;
@@ -14,6 +24,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.ssl.SslHandler;
 import io.netty.util.NetUtil;
 
 /**
@@ -60,6 +71,12 @@ public class ClientListener implements Runnable {
     private ChannelPipeline channelPipeline;
     
     /**
+     * Instance of SSL handler for SSL/TLS secure layer. If <I>null</I> then
+     * SSL/TLS is disabled.
+     */
+    private SslHandler sslHandler;
+    
+    /**
      * New ClientListener instance.
      * Provide socket information and alias deref. flag for LDAP modify operations.
      * 
@@ -79,6 +96,8 @@ public class ClientListener implements Runnable {
     
         this.threadCount = Runtime.getRuntime().availableProcessors();
 
+        this.sslHandler = null;
+        
        	this.channelHandler = new ChannelInitializer<SocketChannel>() {
             @Override
             public void initChannel(SocketChannel ch) throws Exception {
@@ -87,6 +106,14 @@ public class ClientListener implements Runnable {
             	 * Save channel pipeline instance to be accessible for other methods.
             	 */
             	channelPipeline = ch.pipeline();
+            	
+            	/*
+            	 * Check for SSL/TLS setting. If SSL handler is present,
+            	 * then add it as first handler for channel pipeline.
+            	 */
+            	if (sslHandler != null) {
+            		channelPipeline.addFirst(sslHandler);
+            	}
             	
             	/*
             	 *  Message coders and decoders should be first in pipeline.
@@ -131,7 +158,6 @@ public class ClientListener implements Runnable {
             
         };
 
-
     }
 
     /**
@@ -168,6 +194,45 @@ public class ClientListener implements Runnable {
     		}
     	}
 
+    }
+    
+    /**
+     * Enable SSL/TLS on this instance.
+     * 
+     * @param keyStore provide a valid Java {@link KeyStore} object.
+     * 
+     * @throws UnrecoverableKeyException This exception is thrown if a key in the {@link KeyStore} cannot be recovered
+     * @throws KeyStoreException  generic KeyStore exception
+     * @throws NoSuchAlgorithmException This exception is thrown when a particular cryptographic algorithm is requested but is not available in the environment
+     * @throws KeyManagementException see {@link KeyManagementException} 
+     */
+    public void setSSL(KeyStore keyStore) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+
+        /*
+         * Build KeyManager list from KeyStore object.
+         */
+		final KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory
+				.getDefaultAlgorithm());
+		kmf.init(keyStore, "".toCharArray());
+		
+		/*
+		 * Build SSL context.
+		 */
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(kmf.getKeyManagers(), null, null);
+
+        /*
+         * Build SSL engine for server.
+         */
+        SSLEngine sslEngine = sslContext.createSSLEngine();
+        sslEngine.setUseClientMode(false);
+        
+        /*
+         * Create SSL handler instance. Later it will end up as first handler
+         * in channel pipeline.
+         */
+        this.sslHandler = new SslHandler(sslEngine);
+        
     }
     
     @Override

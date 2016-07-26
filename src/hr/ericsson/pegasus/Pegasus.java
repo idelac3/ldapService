@@ -12,8 +12,14 @@ import hr.ericsson.pegasus.welcome.JFrameWelcome;
 import java.awt.EventQueue;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -53,7 +59,7 @@ public class Pegasus {
 	/**
 	 * Version string.
 	 */
-	public static final String ver = "0.24";
+	public static final String ver = "0.25";
 
 	/**
 	 * Kilobyte and Megabyte units.
@@ -156,6 +162,21 @@ public class Pegasus {
 		String derefSockets = "";
 		if (op.isSwitch("--deref")) {
 			derefSockets = op.getSwitch("--deref");
+		}
+
+		String sslSockets = "";
+		if (op.isSwitch("--ssl")) {
+			sslSockets = op.getSwitch("--ssl");
+		}
+
+		String pkcs12filename = "server.p12";
+		if (op.isSwitch("--keyFilename")) {
+			pkcs12filename = op.getSwitch("--keyFilename");
+		}
+
+		String pkcs12password = "";
+		if (op.isSwitch("--keyPassword")) {
+			pkcs12password = op.getSwitch("--keyPassword");
 		}
 
 		String ldifFiles = "";
@@ -352,6 +373,15 @@ public class Pegasus {
 		}
 		
 		/*
+		 * Print root DN value.
+		 */
+		log ("");
+		log ("*****************************************************************");
+		log ("        Root DN: " + myBackend.getRootDN().toString());
+		log ("*****************************************************************");
+		log ("");
+		
+		/*
 		 * Print warning if no LDIF files were loaded. 
 		 */
 		if (totalEntries == 0) {
@@ -446,6 +476,27 @@ public class Pegasus {
 			ClientListener listener = new ClientListener(
 					address, port, 
 					aliasDeref, disableLdapFilter);
+			
+			/*
+			 * Turn on SSL if needed.
+			 */
+			boolean sslFlag = (sslSockets.indexOf(address + ":" + port) >= 0);
+			if (sslFlag) {
+			
+				/*
+				 * For server-side SSL, application needs PKCS12 private key and password
+				 * to open key file. Based on PKCS12 file, an Java KeyStore instance is created. 
+				 */				
+				try {
+					KeyStore keyStore = buildKeyStore(pkcs12filename, pkcs12password);
+					listener.setSSL(keyStore);
+					log ("Socket " + address + ":" + port + " is marked for SSL/TLS. SSL/TLS enabled on this socket.");
+				}
+				catch (Exception ex) {
+					log ("Socket " + address + ":" + port + " failed to enable SSL/TLS. Check server key, PKCS12 format, path to file " + pkcs12filename + ".");
+					ex.printStackTrace();
+				}
+			}
 			
 			/*
 			 * Start listener.
@@ -729,12 +780,51 @@ public class Pegasus {
 	}
 
 	/**
+	 * 
+	 * Build Java {@link KeyStore} object based on key filename and key password. Key should be in PKCS12 format.
+	 * To build a PKCS12 key file using openssl utility, use command:
+	 * <PRE>
+	 *  openssl pkcs12 -export -inkey server.key -in server.crt -name "server" -certfile ca.crt -caname "Root CA" -out server.p12
+	 * </PRE>
+	 * where <I>server.key</I> and <I>server.crt</I> are in PEM format generated server key and certificate. Result is <I>server.p12</I>
+	 * key file.<BR>
+	 * This is typical command for PKI.
+	 * More at <A HREF=https://en.wikipedia.org/wiki/Public_key_infrastructure>Public key infrastructure</A> at Wikipedia.
+	 * 
+	 * @param keyFile a PKCS12 file name, full path or relative path if file is stored in application folder
+	 * @param keyPassword optional password for an access to open a PKCS12 key file
+	 * @return {@link KeyStore} instance required for {@link ClientListener#setSSL(KeyStore)} method
+	 * 
+	 * @throws KeyStoreException if wrong format of file is provided, eg. keyFile is not a PKCS12 file
+	 * @throws NoSuchAlgorithmException if PKCS12 KeyStore format is unsupported on selected JVM
+	 * @throws CertificateException if key in PKCS12 file is expired
+	 * @throws FileNotFoundException if key file path is wrong 
+	 * @throws IOException read permission for PKCS12 key file is not available, or IO reading error
+	 */
+	private static KeyStore buildKeyStore (String keyFile, String keyPassword) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException {
+
+    	/*
+    	 * Make a KeyStore object from a provided PKCS12 file (key + cert in *.p12 mixed)
+    	 */
+    	final KeyStore keyStore;
+    	
+    	keyStore = KeyStore.getInstance("PKCS12");
+        keyStore.load(new FileInputStream(keyFile), keyPassword.toCharArray());
+	
+        return keyStore;
+	}
+	
+	/**
 	 * Print application usage information.
 	 */
 	private static void usage() {
 		String msg = "Usage:\n"
 				+ "  --bind  [ip1:port1,ip2:port2,...]   binds to specific ip socket(s). Default: 0.0.0.0:389\n"
 				+ "  --deref [ip1:port1,ip2:port2,...]   do alias dereferencing on selected socket(s). Default: none\n"
+				+ "  --ssl   [ip1:port1,ip2:port2,...]   mark socket as SSL/TLS. Requires key file. Default: none\n"
+				+ "\n"
+				+ "  --keyFilename [filename         ]   for --ssl provide a valid PKCS12 (*.p12) key file. Default: 'server.p12'\n"
+				+ "  --keyPassword [secret string    ]   for --key provide access password. Default: ''\n"
 				+ "\n"
 				+ "  --ldifFiles   [file1,file2, ... ]  ldif file list. If not provided, database will be empty.\n"
 				+ "  --schemaFiles [file1,file2, ... ]  OpenLDAP schema file list. If omitted, schemas are not used.\n"

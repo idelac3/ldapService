@@ -4,7 +4,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/home/igor/workspace-java/Pegaz/lib/netty-all-5.0.0.Alpha1.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Users/eigorde/workspace/Pegaz/lib/netty-all-5.0.0.Alpha1-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:file:/home/igor/workspace-java/Pegaz/lib/netty-all-5.0.0.Alpha1-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/home/igor/workspace-java/Pegaz/lib/netty-all-5.0.0.Alpha1-javadoc.jar"/>

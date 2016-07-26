@@ -106,6 +106,32 @@ public class LdapSearchHandler {
 		 */
 		CustomStr rootDN = Pegasus.myBackend.getRootDN();
 		if (!(dn.endsWith(rootDN))) {
+			
+			/*
+			 * Special case: root / base DN is empty in LDAP SEARCH request,
+			 * but Attribute List contains one attribute: 'namingcontexts'
+			 * Should return list of root DNs (for now only 1 root DN). 
+			 */
+			for (String attribute : request.getAttributes()) {
+				if (attribute.equalsIgnoreCase("namingcontexts")) {
+					
+					Entry rootEntry = new Entry(new DN(""), new Attribute("namingcontexts", rootDN.toString()));
+
+					// Build SearchResultEntry object.
+					SearchResultEntry searchEntry = new SearchResultEntry(rootEntry);
+
+					// Increment statistic.
+					Pegasus.entryResults++;
+
+					// Send each search entry to channel.
+					sendSearchResultEntry(messageID, searchEntry,
+							searchEntry.getControls());
+					
+				    return new LDAPMessage(messageID, searchResultDoneProtocolOp,
+				            Collections.<Control>emptyList());
+				}
+			}
+			
 			/*
 			 *  Return error code 32 (NO_SUCH_OBJECT) when DN is not found or invalid.
 			 */
