@@ -5,12 +5,14 @@ import java.awt.event.ActionListener;
 
 import com.unboundid.util.Debug;
 
+import hr.ericsson.pegasus.Pegasus;
+
 /**
  * <H1>Debug enabled, ActionListener</H1>
  * <HR>
  * This action defined here will toggle {@link Debug} global status.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class ActionListenerDebugEnabled implements ActionListener {
@@ -18,12 +20,7 @@ public class ActionListenerDebugEnabled implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		if (Debug.debugEnabled()) {
-			Debug.setEnabled(false);
-		}
-		else {
-			Debug.setEnabled(true);
-		}
+		Pegasus.debugEnabled = !(Pegasus.debugEnabled);
 		
 	}
 

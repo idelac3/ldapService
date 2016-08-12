@@ -13,11 +13,13 @@ public class AddAliasEntry {
 	 * This function performs LDAP ADD operation.
 	 */
 	public static LDAPResult addAlias(LDAPConnection ldapConnection, int id) throws LDAPException {
-
-		Attribute objectClass = new Attribute("objectClass", "alias", "extensibleObject");
-		Attribute applicationName = new Attribute("aliasedObjectName", "ApplicationName=APP" + id + ",o=ericsson,dc=com");
 		
-		Entry entry = new Entry("APP=" + id + ",o=ericsson,dc=com", objectClass, applicationName);
+		String rootDN = LdapFunctionTest.getDN();
+		
+		Attribute objectClass = new Attribute("objectClass", "alias", "extensibleObject");
+		Attribute applicationName = new Attribute("aliasedObjectName", "ApplicationName=APP" + id + "," + rootDN);
+		
+		Entry entry = new Entry("APP=" + id + "," + rootDN, objectClass, applicationName);
 		
 		LDAPResult result = ldapConnection.add(entry);
 		return result;

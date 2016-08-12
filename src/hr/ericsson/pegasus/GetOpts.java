@@ -12,7 +12,7 @@ import java.util.List;
  * do not start with - (dash).<BR>
  * <BR>
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class GetOpts {

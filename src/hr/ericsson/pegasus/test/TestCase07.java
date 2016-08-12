@@ -12,7 +12,7 @@ import com.unboundid.ldap.sdk.LDAPException;
  *  <LI>DELETE</LI>
  * </UL>
  * Test level: BASIC
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class TestCase07 extends LdapTestCase {

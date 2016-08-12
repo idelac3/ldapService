@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
  * This action defined here will erase all entries on backend, see {@link Pegasus#myBackend}.
  * Backend Service will preserve a list of loaded LDIFs, see {@link ConcurrentBackend#reloadLDIFs()}.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class ActionListenerLDIFDeleteAllEntries implements ActionListener {

@@ -6,11 +6,14 @@ import java.util.List;
 
 import com.unboundid.ldap.sdk.LDAPConnection;
 import com.unboundid.ldap.sdk.LDAPException;
+import com.unboundid.ldap.sdk.LDAPSearchException;
+import com.unboundid.ldap.sdk.SearchResult;
+import com.unboundid.ldap.sdk.SearchScope;
 
 /**
  * This class contains series of test cases that test LDAP operations.
  * 
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class LdapFunctionTest {
@@ -29,7 +32,28 @@ public class LdapFunctionTest {
 	
 	static String bindDN = "cn=Manager,o=ericsson,dc=com";
 	static String password = "SECRET";
-		
+	
+	static String baseDN = null;
+	
+	/**
+	 * Read root DN from LDAP server.
+	 * 
+	 * @return root DN string (eg. o=company,dc=com)
+	 */
+	public static String getDN() {
+		if (baseDN == null) {
+			try {
+				SearchResult searchResult = ldapConnection.search("", SearchScope.BASE, "(objectClass=*)", "namingcontexts");
+				baseDN = searchResult.getSearchEntries().get(0).getAttribute("namingcontexts").getValue();
+			} catch (LDAPSearchException e) {
+				baseDN = "";
+				e.printStackTrace();				
+			}
+		}
+			
+		return baseDN;
+	}
+	
 	public static void main(String[] args) throws InterruptedException {
 
 		try {
@@ -50,6 +74,11 @@ public class LdapFunctionTest {
 			ldapConnection.bind(bindDN, password);
 
 			/*
+			 * Set 15 sec. timeout for every LDAP operation.
+			 */
+			ldapConnection.getConnectionOptions().setResponseTimeoutMillis(15000);
+			
+			/*
 			 * Test Case list.
 			 */
 			LdapTestCase[] testCaseList = {
@@ -64,6 +93,7 @@ public class LdapFunctionTest {
 					
 					new TestCase11(),
 					new TestCase12(),
+					new TestCase13(),
 					
 					new TestCase21(),
 					new TestCase22(),

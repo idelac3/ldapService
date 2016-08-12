@@ -16,7 +16,7 @@ import com.unboundid.ldap.sdk.LDAPResult;
  *  <LI>DELETE</LI>
  * </UL>
  * Test level: SIMULTANEOUS
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class TestCase22 extends LdapTestCase {

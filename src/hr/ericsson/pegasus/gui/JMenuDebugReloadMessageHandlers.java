@@ -5,7 +5,7 @@ import javax.swing.JMenuItem;
 /**
  * <H1>Debug, Reload MessageHandler instances, Menu Item</H1>
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 

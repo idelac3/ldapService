@@ -20,7 +20,7 @@ import javax.swing.SwingConstants;
  * This action defined here will synchronize this instance of {@link Pegasus} application and
  * remote peer instance.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class ActionListenerFileTransferBackendData implements ActionListener {

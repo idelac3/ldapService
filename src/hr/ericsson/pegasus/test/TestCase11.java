@@ -11,7 +11,7 @@ import com.unboundid.ldap.sdk.LDAPException;
  *  <LI>DELETE</LI>
  * </UL>
  * Test level: NEGATIVE
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class TestCase11 extends LdapTestCase {

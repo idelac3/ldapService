@@ -7,7 +7,7 @@ import javax.swing.JCheckBoxMenuItem;
  * <HR>
  * Toggle statistic display in total or delta values.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class JMenuStatisticDelta extends JCheckBoxMenuItem {

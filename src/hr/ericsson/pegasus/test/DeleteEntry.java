@@ -12,7 +12,9 @@ public class DeleteEntry {
 	 */
 	public static LDAPResult delEntry(LDAPConnection ldapConnection, int id) throws LDAPException {
 		
-		LDAPResult result = ldapConnection.delete("ApplicationName=APP" + id + ",o=ericsson,dc=com");
+		String rootDN = LdapFunctionTest.getDN();
+		
+		LDAPResult result = ldapConnection.delete("ApplicationName=APP" + id + "," + rootDN);
 		return result;
 
 	}
@@ -23,7 +25,9 @@ public class DeleteEntry {
 	 */
 	public static LDAPResult delInvalidEntry(LDAPConnection ldapConnection) throws LDAPException {
 		
-		LDAPResult result = ldapConnection.delete("ApplicationName=APPxxx,o=ericsson,dc=com");
+		String rootDN = LdapFunctionTest.getDN();
+		
+		LDAPResult result = ldapConnection.delete("ApplicationName=APPxxx," + rootDN);
 		return result;
 
 	}

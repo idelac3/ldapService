@@ -14,10 +14,12 @@ public class AddEntry {
 	 */
 	public static LDAPResult addEntry(LDAPConnection ldapConnection, int id) throws LDAPException {
 
+		String baseDN = LdapFunctionTest.getDN();
+		
 		Attribute objectClass = new Attribute("objectClass", "top", "UserDatabaseApplication");
 		Attribute applicationName = new Attribute("ApplicationName", "APP" + id);
 		
-		Entry entry = new Entry("ApplicationName=APP" + id + ",o=ericsson,dc=com", objectClass, applicationName);
+		Entry entry = new Entry("ApplicationName=APP" + id + "," + baseDN, objectClass, applicationName);
 		
 		LDAPResult result = ldapConnection.add(entry);
 		return result;
@@ -33,7 +35,7 @@ public class AddEntry {
 		Attribute objectClass = new Attribute("objectClass", "top", "UserDatabaseApplication");
 		Attribute applicationName = new Attribute("ApplicationName", "APPxxx");
 		
-		Entry entry = new Entry("ApplicationName=APPxxx,yyy,o=ericsson,dc=com", objectClass, applicationName);
+		Entry entry = new Entry("ApplicationName=APPxxx,yyy,o=company,dc=com", objectClass, applicationName);
 		
 		LDAPResult result = ldapConnection.add(entry);
 		return result;

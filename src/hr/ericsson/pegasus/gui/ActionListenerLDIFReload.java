@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
  * This action defined here will try to load all LDIFs on backend, see {@link ConcurrentBackend#reloadLDIFs()}.
  * Backend Service keeps a list of loaded LDIFs each time a new LDIF is loaded.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class ActionListenerLDIFReload implements ActionListener {

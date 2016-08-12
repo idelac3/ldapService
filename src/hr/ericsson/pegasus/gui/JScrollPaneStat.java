@@ -11,7 +11,7 @@ import javax.swing.JScrollPane;
  * See {@link Pegasus} definition of variables for statistic 
  * ({@link Pegasus#addRequest}, {@link Pegasus#clientConnections}, {@link Pegasus#entryResults}, etc.)<BR>
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class JScrollPaneStat extends JScrollPane {

@@ -15,6 +15,8 @@ import com.unboundid.ldap.sdk.LDAPException;
  * look at <A HREF=http://netty.io/5.0/api/io/netty/channel/SimpleChannelInboundHandler.html>Netty, User Guide, SimpleChannelInboundHandler</A>
  * <P>This class is used by {@link ClientListener} class internally.</P>
  * <HR>
+ * 
+ * @author igor.delac@gmail.com
  */
 public class MessageHandler extends SimpleChannelInboundHandler<LDAPMessage>  {
 
@@ -57,10 +59,9 @@ public class MessageHandler extends SimpleChannelInboundHandler<LDAPMessage>  {
 	 * Create new instance of MessageHandler.
 	 * 
      * @param aliasDeref perform first alias dereferencing on LDAP modify request
-     * @param disableLdapFilter <I>true</I> to disable LDAP filter matching and increase speed
      * 
      **/
-	public MessageHandler (boolean aliasDeref, boolean disableLdapFilter) {
+	public MessageHandler (boolean aliasDeref) {
         
 		// Save dereferencing flag.
         this.aliasDeref = aliasDeref;
@@ -70,7 +71,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<LDAPMessage>  {
         ldapBindHandler = new LdapBindHandler();
         ldapDeleteHandler = new LdapDeleteHandler();
         ldapModifyHandler = new LdapModifyHandler(this.aliasDeref);
-        ldapSearchHandler = (disableLdapFilter ? new LdapSearchWithoutFilterHandler() : new LdapSearchHandler());
+        ldapSearchHandler = new LdapSearchHandler();
 
 	}
 	
@@ -79,7 +80,9 @@ public class MessageHandler extends SimpleChannelInboundHandler<LDAPMessage>  {
 
     	int messageID = ldapMessage.getMessageID();
     	
-    	Pegasus.debug("LDAP request " + messageID + " received from " + ctx.channel().remoteAddress() + " ...");
+    	Pegasus.debug("LDAP request " + messageID + " received from " + ctx.channel().remoteAddress() + ".");
+    	Pegasus.debug(ldapMessage.toString());
+    	Pegasus.debug("");
     	
     	if (ldapMessage.getProtocolOpType() == 
     			LDAPMessage.PROTOCOL_OP_TYPE_ABANDON_REQUEST) {

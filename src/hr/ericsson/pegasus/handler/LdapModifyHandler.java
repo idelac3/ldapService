@@ -1,10 +1,6 @@
 package hr.ericsson.pegasus.handler;
 
-import hr.ericsson.pegasus.Pegasus;
-import hr.ericsson.pegasus.backend.CustomStr;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -12,18 +8,22 @@ import java.util.TreeSet;
 import com.unboundid.ldap.protocol.LDAPMessage;
 import com.unboundid.ldap.protocol.ModifyRequestProtocolOp;
 import com.unboundid.ldap.protocol.ModifyResponseProtocolOp;
-import com.unboundid.ldap.sdk.Control;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.Modification;
 import com.unboundid.ldap.sdk.ResultCode;
+import com.unboundid.ldap.sdk.schema.EntryValidator;
+import com.unboundid.util.StaticUtils;
+
+import hr.ericsson.pegasus.Pegasus;
+import hr.ericsson.pegasus.backend.CustomStr;
 
 /**
  * <H1>Ldap Modify Handler</H1>
  * <HR>
  * This handler is used for LDAP modify requests.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class LdapModifyHandler {
@@ -71,6 +71,28 @@ public class LdapModifyHandler {
 		CustomStr dn = new CustomStr(request.getDN());
 		
 		/*
+		 * Verify that DN in request has valid root DN at the end.
+		 */
+		CustomStr rootDN = Pegasus.myBackend.getRootDN();
+		
+		/*
+		 * Case when invalid DN is in ADD request.
+		 */
+		if ( !dn.endsWith(rootDN) ) {
+			
+			/*
+			 * Break on any attempt with wrong DN.
+			 */
+			
+			Pegasus.failedModify++;
+			
+	        return new LDAPMessage(messageID, new ModifyResponseProtocolOp(
+	                ResultCode.NO_SUCH_OBJECT_INT_VALUE, request.getDN(),
+	                "Invalid DN.", null), StaticUtils.NO_CONTROLS);
+	    
+		}
+		
+		/*
 		 * Get entry here. Might be alias not a real entry.
 		 */
 		Entry entry = Pegasus.myBackend.getEntry(dn); 
@@ -84,7 +106,7 @@ public class LdapModifyHandler {
 			
 	        return new LDAPMessage(messageID, new ModifyResponseProtocolOp(
 	                ResultCode.NO_SUCH_OBJECT_INT_VALUE, request.getDN(),
-	                "Entry does not exist.", null));
+	                "Entry does not exist.", null), StaticUtils.NO_CONTROLS);
 	        
 		}
 		
@@ -141,7 +163,7 @@ public class LdapModifyHandler {
 			
 	        return new LDAPMessage(messageID, new ModifyResponseProtocolOp(
 	                ResultCode.NO_SUCH_OBJECT_INT_VALUE, request.getDN(),
-	                "Entry does not exist.", null));
+	                "Entry does not exist.", null), StaticUtils.NO_CONTROLS);
 	        
 		}
 		
@@ -151,7 +173,7 @@ public class LdapModifyHandler {
 
 			/*
 			 *  Build custom list of modifications, due limitation that
-			 *  it is not allowed to change attributes which are present in DN. 
+			 *  it is not allowed to change attribute which is present in DN. 
 			 */
 			List<Modification> modifications = new ArrayList<Modification>();
 			for (Modification mod : request.getModifications()) {
@@ -167,6 +189,51 @@ public class LdapModifyHandler {
 			// Check that we have modifications at all, and apply them to entry.
 			if (modifications.size() > 0) {
 				modifiedEntry = Entry.applyModifications(entry, true, modifications);
+
+				/*
+				 * Check entry against schema. Only if schema object instance is present.
+				 */
+				if (Pegasus.schema != null) {
+					
+					/*
+					 * Entry Validator which uses schema definition(s).
+					 */
+					EntryValidator validator = new EntryValidator(Pegasus.schema);
+					
+					/*
+					 * List of reasons why entry is invalid.
+					 */
+					List<java.lang.String> invalidReasons = new ArrayList<String>();
+					
+					if (validator.entryIsValid(modifiedEntry, invalidReasons)) {
+						// Ok, entry pass schema validation.
+					}
+					else {
+						// Entry did not pass schema validation.
+						Pegasus.debug("Modification of " + modifiedEntry.getDN() + " did not pass schema validation.");
+						for (Modification modification : modifications) {
+							
+							if (modification.getValues().length < 2) {
+								Pegasus.debug(modification.getAttributeName() + ": " + modification.getValues()[0]);
+							}
+							else {
+								Pegasus.debug(modification.getAttributeName() + ": ");
+								for (String value : modification.getValues()) {
+									Pegasus.debug(" " + value);
+								}
+							}
+						}
+						
+						Pegasus.debug("Invalid entry reasons:");
+						for (String reason : invalidReasons) {
+							Pegasus.debug(reason);
+						}
+						
+				        return new LDAPMessage(messageID, new ModifyResponseProtocolOp(
+				                ResultCode.NAMING_VIOLATION_INT_VALUE, dn.toString(),
+				                "Schema violation", null), StaticUtils.NO_CONTROLS);
+					}
+				}
 			}
 
 		} catch (LDAPException e) {
@@ -177,7 +244,7 @@ public class LdapModifyHandler {
 			
 	        return new LDAPMessage(messageID, new ModifyResponseProtocolOp(
 	                e.getResultCode().intValue(), dn.toString(),
-	                e.getMessage(), null));
+	                e.getMessage(), null), StaticUtils.NO_CONTROLS);
 		}
 		
 		Pegasus.modifyRequests++;
@@ -188,7 +255,7 @@ public class LdapModifyHandler {
 
 				// Result is positive, return default return message.
 				return new LDAPMessage(messageID, modifyResponseProtocolOp,
-			            Collections.<Control>emptyList());
+						StaticUtils.NO_CONTROLS);
 						
 			}
 			else {
@@ -196,13 +263,13 @@ public class LdapModifyHandler {
 				// Modification failed.
 		        return new LDAPMessage(messageID, new ModifyResponseProtocolOp(
 		                ResultCode.NO_SUCH_OBJECT_INT_VALUE, request.getDN(),
-		                "Entry does not exist.", null));
+		                "Entry does not exist.", null), StaticUtils.NO_CONTROLS);
 		        	
 			}
 		}
 		
 		return new LDAPMessage(messageID, modifyResponseProtocolOp,
-	            Collections.<Control>emptyList());
+				StaticUtils.NO_CONTROLS);
 		
 	}
 

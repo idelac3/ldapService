@@ -35,7 +35,7 @@ import com.unboundid.ldap.sdk.SearchScope;
  * Implementation has {@link Runnable} interface and should be started from a thread.
  * A thread should have low priority.
  * <HR>   
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class TransferBackendData implements Runnable {

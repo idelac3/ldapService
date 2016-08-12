@@ -1,22 +1,21 @@
 package hr.ericsson.pegasus.handler;
 
-import hr.ericsson.pegasus.Pegasus;
-
-import java.util.Collections;
 import java.util.List;
 
 import com.unboundid.ldap.protocol.BindRequestProtocolOp;
 import com.unboundid.ldap.protocol.BindResponseProtocolOp;
 import com.unboundid.ldap.protocol.LDAPMessage;
-import com.unboundid.ldap.sdk.Control;
 import com.unboundid.ldap.sdk.ResultCode;
+import com.unboundid.util.StaticUtils;
+
+import hr.ericsson.pegasus.Pegasus;
 
 /**
  * <H1>Ldap Bind Handler</H1>
  * <HR>
  * This handler is used for LDAP bind requests.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class LdapBindHandler {
@@ -53,7 +52,7 @@ public class LdapBindHandler {
 		Pegasus.clientConnections++;
 		
 	    return new LDAPMessage(messageID, bindResponseProtocolOp,
-	            Collections.<Control>emptyList());
+	    		StaticUtils.NO_CONTROLS);
 	}
 
 }

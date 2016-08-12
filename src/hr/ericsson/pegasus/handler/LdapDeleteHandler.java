@@ -1,25 +1,24 @@
 package hr.ericsson.pegasus.handler;
 
-import hr.ericsson.pegasus.Pegasus;
-import hr.ericsson.pegasus.backend.CustomStr;
-import hr.ericsson.pegasus.backend.Data;
-
-import java.util.Collections;
 import java.util.List;
 import java.util.SortedMap;
 
 import com.unboundid.ldap.protocol.DeleteRequestProtocolOp;
 import com.unboundid.ldap.protocol.DeleteResponseProtocolOp;
 import com.unboundid.ldap.protocol.LDAPMessage;
-import com.unboundid.ldap.sdk.Control;
 import com.unboundid.ldap.sdk.ResultCode;
+import com.unboundid.util.StaticUtils;
+
+import hr.ericsson.pegasus.Pegasus;
+import hr.ericsson.pegasus.backend.CustomStr;
+import hr.ericsson.pegasus.backend.Data;
 
 /**
  * <H1>Ldap Delete Handler</H1>
  * <HR>
  * This handler is used for LDAP delete requests.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class LdapDeleteHandler {
@@ -75,7 +74,7 @@ public class LdapDeleteHandler {
 			// Do not allow delete operation on invalid DN.			
 	        return new LDAPMessage(messageID, new DeleteResponseProtocolOp(
 	                ResultCode.NO_SUCH_OBJECT_INT_VALUE, request.getDN(),
-	                "DN not found.", null));
+	                "DN not found.", null), StaticUtils.NO_CONTROLS);
 			
 		}
 		
@@ -86,7 +85,7 @@ public class LdapDeleteHandler {
 			// Do not allow delete operation of entries that have child elements.			
 	        return new LDAPMessage(messageID, new DeleteResponseProtocolOp(
 	                ResultCode.NOT_ALLOWED_ON_NONLEAF_INT_VALUE, request.getDN(),
-	                "Child element(s) still exist.", null));
+	                "Child element(s) still exist.", null), StaticUtils.NO_CONTROLS);
 	        
 		}
 		
@@ -101,12 +100,12 @@ public class LdapDeleteHandler {
 			// Entry probably not found in backend.
 			return new LDAPMessage(messageID, new DeleteResponseProtocolOp(
 	                ResultCode.NO_SUCH_OBJECT_INT_VALUE, request.getDN(),
-	                "DN not found.", null));
+	                "DN not found.", null), StaticUtils.NO_CONTROLS);
 			
 		}
 		
 		return new LDAPMessage(messageID, deleteResponseProtocolOp,
-	            Collections.<Control>emptyList());
+				StaticUtils.NO_CONTROLS);
 	}
 
 

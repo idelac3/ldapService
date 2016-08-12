@@ -15,7 +15,7 @@ import java.util.List;
  * It can read OpenLdap schema files and provided information in LDIF format
  * suitable when replying to LDAP requests related to schema information.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class SchemaReader {
@@ -32,6 +32,11 @@ public class SchemaReader {
 	 */
 	private List<String> objectClasses;
 	
+	/**
+	 * Hold list of loaded schema file(s).
+	 */
+	private List<String> fileList;
+	
     /**
 	 * Create new Schema Reader object.
 	 */
@@ -41,9 +46,22 @@ public class SchemaReader {
     	}
     	if (objectClasses == null) {
     		objectClasses = new ArrayList<String>();
-    	}       
+    	}
+    	if (fileList == null) {
+    		fileList = new ArrayList<String>();
+    	}
 	}
 
+	/**
+	 * Get schema file list of loaded schema files.
+	 * 
+	 * @return file list, should be *.schema and *.ldif list
+	 * of files
+	 */
+	public List<String> getSchemaFileList() {
+		return fileList;
+	}
+	
 	/**
      * Load OpenLDAP compatible schema file.<BR>
      * This function will read schema entries in OpenLDAP format,
@@ -79,6 +97,9 @@ public class SchemaReader {
                 // Replacement for objectclass.
                 flag = true;
                 line = line.replaceAll("objectclass", "objectClasses:");
+            }   
+            else if (line.trim().startsWith("objectClasses:") || line.trim().startsWith("attributeTypes:") ) {
+            	flag = true;
             } else if (line.trim().startsWith("#")) {
                 // Skip comment lines.
             } else if (line.length() == 0) {
@@ -166,6 +187,8 @@ public class SchemaReader {
 
         bReader.close();
 
+        fileList.add(schemaFileName);
+        
     }
     
 	/**
@@ -184,4 +207,39 @@ public class SchemaReader {
 		return objectClasses;
 	}
 
+	/**
+	 * Return {@link SchemaReader} instance content in LDIF format.
+	 * 
+	 * @return object class and attributes in this instance
+	 */
+	public String toLDIF() {
+		
+		String header = "dn: cn=schema\n" +
+				"objectClass: top\n" +
+				"objectClass: ldapSubEntry\n" +
+				"objectClass: subschema\n" +
+				"cn: schema\n";
+		
+		return header + toString();
+	}
+	
+	@Override
+	public String toString() {
+		
+		StringBuilder sb = new StringBuilder();
+		
+		for (String attributeItem : attributeTypes) {
+			sb.append(attributeItem);
+			sb.append('\n');
+		}
+		
+		for (String objectClassItem : objectClasses) {
+			sb.append(objectClassItem);
+			sb.append('\n');
+		}
+		
+		return sb.toString();
+		
+	}
+	
 }

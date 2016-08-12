@@ -12,7 +12,9 @@ public class DeleteAliasEntry {
 	 */
 	public static LDAPResult delAliasEntry(LDAPConnection ldapConnection, int id) throws LDAPException {
 		
-		LDAPResult result = ldapConnection.delete("APP=" + id + ",o=ericsson,dc=com");
+		String rootDN = LdapFunctionTest.getDN();
+		
+		LDAPResult result = ldapConnection.delete("APP=" + id + "," + rootDN);
 		return result;
 
 	}

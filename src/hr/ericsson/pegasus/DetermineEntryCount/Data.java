@@ -6,7 +6,7 @@ package hr.ericsson.pegasus.DetermineEntryCount;
  * This simple class is used only in {@link DetermineNumberOfEntries} as complex type
  * that holds file path, last modification time stamp and how many LDIF entries file contains.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class Data {

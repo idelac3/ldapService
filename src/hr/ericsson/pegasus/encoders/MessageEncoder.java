@@ -3,6 +3,7 @@ import com.unboundid.asn1.ASN1Buffer;
 import com.unboundid.ldap.protocol.LDAPMessage;
 
 import hr.ericsson.pegasus.ClientListener;
+import hr.ericsson.pegasus.Pegasus;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
@@ -14,7 +15,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
  * look at <A HREF=http://netty.io/5.0/api/io/netty/handler/codec/MessageToByteEncoder.html>Netty, User Guide, MessageToByteEncoder</A>
  * <P>This class is used by {@link ClientListener} class internally.</P>
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  */
 public class MessageEncoder extends MessageToByteEncoder<LDAPMessage> {
 	
@@ -25,6 +26,11 @@ public class MessageEncoder extends MessageToByteEncoder<LDAPMessage> {
 		msg.writeTo(asn1buffer);
 		
 		out.writeBytes(asn1buffer.toByteArray());
+		
+    	Pegasus.debug("LDAP response " + msg.getMessageID() + " sent to " + ctx.channel().remoteAddress() + ".");
+    	Pegasus.debug(msg.toString());
+    	Pegasus.debug("");
+
 	}
 
 }

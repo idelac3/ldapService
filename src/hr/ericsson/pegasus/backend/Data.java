@@ -9,7 +9,7 @@ import com.unboundid.ldap.sdk.Entry;
  * <HR>
  * Hold {@link Entry} instance, parent DN, and map of first level sub entries.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class Data {

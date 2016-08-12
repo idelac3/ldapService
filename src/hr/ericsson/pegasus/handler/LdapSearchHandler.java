@@ -1,12 +1,6 @@
 package hr.ericsson.pegasus.handler;
 
-import hr.ericsson.pegasus.Pegasus;
-import hr.ericsson.pegasus.backend.CustomStr;
-import hr.ericsson.pegasus.backend.Data;
-import io.netty.channel.ChannelHandlerContext;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.SortedMap;
 
@@ -23,13 +17,19 @@ import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.ResultCode;
 import com.unboundid.ldap.sdk.SearchResultEntry;
 import com.unboundid.ldap.sdk.SearchScope;
+import com.unboundid.util.StaticUtils;
+
+import hr.ericsson.pegasus.Pegasus;
+import hr.ericsson.pegasus.backend.CustomStr;
+import hr.ericsson.pegasus.backend.Data;
+import io.netty.channel.ChannelHandlerContext;
 
 /**
  * <H1>Ldap Search Handler</H1>
  * <HR>
  * This handler is used for LDAP search requests.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class LdapSearchHandler {
@@ -105,16 +105,20 @@ public class LdapSearchHandler {
 		 * Verify that DN in request has valid root DN at the end.
 		 */
 		CustomStr rootDN = Pegasus.myBackend.getRootDN();
-		if (!(dn.endsWith(rootDN))) {
-			
-			/*
-			 * Special case: root / base DN is empty in LDAP SEARCH request,
-			 * but Attribute List contains one attribute: 'namingcontexts'
-			 * Should return list of root DNs (for now only 1 root DN). 
-			 */
+		
+		/*
+		 * Here are some special cases when base DN is empty.
+		 */
+		if (request.getBaseDN().length() == 0) {
+
 			for (String attribute : request.getAttributes()) {
-				if (attribute.equalsIgnoreCase("namingcontexts")) {
-					
+				/*
+				 * Special case: root / base DN is empty in LDAP SEARCH request,
+				 * but Attribute List contains one attribute: 'namingcontexts'
+				 * Should return list of root DNs (for now only 1 root DN). 
+				 */
+				if ( attribute.equalsIgnoreCase("namingcontexts") ) {
+					// Give back to client root DN value.
 					Entry rootEntry = new Entry(new DN(""), new Attribute("namingcontexts", rootDN.toString()));
 
 					// Build SearchResultEntry object.
@@ -126,18 +130,63 @@ public class LdapSearchHandler {
 					// Send each search entry to channel.
 					sendSearchResultEntry(messageID, searchEntry,
 							searchEntry.getControls());
-					
-				    return new LDAPMessage(messageID, searchResultDoneProtocolOp,
-				            Collections.<Control>emptyList());
+
+					return new LDAPMessage(messageID, searchResultDoneProtocolOp,
+							StaticUtils.NO_CONTROLS);					
 				}
+
+				/*
+				 * Special case: root / base DN is empty in LDAP SEARCH request,
+				 * but Attribute List contains one attribute: 'subschemasubentry'
+				 * Should return root DN for Schema DIT, usually cn=Subschema. 
+				 */
+				if (attribute.equalsIgnoreCase("subschemasubentry")) {
+					
+					// Form built-in entry here.
+					Entry subschemaSubentry = new Entry(
+							new DN(Pegasus.myBackend.getRootDN().toString()),
+							new Attribute("subschemaSubentry", "cn=Subschema"));
+					
+					// Send built-in entry.
+					SearchResultEntry searchEntry = new SearchResultEntry(subschemaSubentry);
+					sendSearchResultEntry(messageID, searchEntry, searchEntry.getControls());
+					
+					// Increment statistic.
+					Pegasus.entryResults++;
+					
+					// Break execution of this method here.
+				    return new LDAPMessage(messageID, searchResultDoneProtocolOp,
+				            StaticUtils.NO_CONTROLS);
+				    
+				}
+
 			}
+
+		}
+		
+		/*
+		 * A request with base DN set to "cn=Subschema" is processed as schema request.
+		 */
+		if (request.getBaseDN().equalsIgnoreCase("cn=Subschema") ) {
 			
+			/*
+			 * Schema requests usually have base DN set to empty string, "" value.
+			 */
+			return processSchemaRequest(messageID, request.getBaseDN(), request.getAttributes());
+			
+		}
+		
+		/*
+		 * Case when invalid DN is in SEARCH request, deny such request.
+		 */
+		if (!dn.endsWith(rootDN) || request.getBaseDN().length() == 0) {
+
 			/*
 			 *  Return error code 32 (NO_SUCH_OBJECT) when DN is not found or invalid.
 			 */
 		    return new LDAPMessage(messageID,
 		    		new SearchResultDoneProtocolOp(ResultCode.NO_SUCH_OBJECT_INT_VALUE, "Root DN don't match: '" + dn.toString() + "'", null, null),
-		            Collections.<Control>emptyList());
+		            StaticUtils.NO_CONTROLS);
 		}
 			
 		/*
@@ -159,84 +208,10 @@ public class LdapSearchHandler {
 			}
 		}
 
-		/*
-		 * Single CUDB Access feature.
-		 * A request in form:
-		 *  IMSI=xxxx, o=ericsson,dc=com
-		 * is translated into proper DNs for AUC and HLRHSS entries.
-		 */
-		String upperCaseDN = request.getBaseDN().toUpperCase();
-		String regex1 = "IMSI=\\d+,O=ERICSSON,DC=COM";
-		boolean dnMatch = upperCaseDN.matches(regex1);
-		
-		String filter = request.getFilter().toString();
-		boolean filterMatch = filter.indexOf("(objectClass=CP1)") > 0 && 
-				filter.indexOf("(objectClass=CPR01)") > 0 &&
-				filter.indexOf("(objectClass=AU1)") > 0;
-				
-		if (dnMatch && filterMatch) {
-			/*
-			 * This is special case.
-			 * Return entries from AUC and HLRHSS branch for particular subscriber.
-			 *  SUBSID=xxxx,cn=SUBSCRIBERS,UserContainerName=USERINFORMATION,ApplicationName=HLRHSS, o=ericsson,dc=com
-			 *  IMSI=xxxx,cn=GSMGPRSACCESS,UserContainerName=USERINFORMATION,ApplicationName=AUCS,   o=ericsson,dc=com
-			 */
-			int beginIndex = "IMSI=".length();
-			int endIndex = upperCaseDN.indexOf(",O=ERICSSON,DC=COM");
-			String subscriber = upperCaseDN.substring(beginIndex, endIndex);
-			
-			/*
-			 * Create DNs for HLRHSS and AUCS.
-			 */
-			CustomStr hlrhssDN = new CustomStr("SUBSID=" + subscriber + ",cn=SUBSCRIBERS,UserContainerName=USERINFORMATION,ApplicationName=HLRHSS,o=ericsson,dc=com");
-			CustomStr aucsDN = new CustomStr("IMSI=" + subscriber + ",cn=GSMGPRSACCESS,UserContainerName=USERINFORMATION,ApplicationName=AUCS,o=ericsson,dc=com");
-			
-			/*
-			 * Request backend to supply those entries.
-			 */
-			Entry hlrhssEntry = Pegasus.myBackend.getEntry(hlrhssDN);
-			Entry aucsEntry = Pegasus.myBackend.getEntry(aucsDN);
-			
-			/*
-			 * Send them to LDAP client.
-			 */
-			Entry[] entryList = { hlrhssEntry, aucsEntry };
-			for (Entry entry : entryList) {
-				if (entry != null) {
-					List<String> requestedAttributes = request.getAttributes();
-					Entry newEntry = getEntryWithRequestedAttributes(entry, requestedAttributes);
-
-					// Build SearchResultEntry object.
-					SearchResultEntry searchEntry = new SearchResultEntry(newEntry);
-
-					// Increment statistic.
-					Pegasus.entryResults++;
-
-					// Send each search entry to channel.
-					sendSearchResultEntry(messageID, searchEntry,
-							searchEntry.getControls());
-				}
-			}
-			
-		}
-		else if (request.getScope() == SearchScope.BASE) {
+		if (request.getScope() == SearchScope.BASE) {
 			
 			Pegasus.searchRequestsBase++;
-			
-			/*
-			 * A request with zero-length base DN or "cn=Subschema" base DN 
-			 *  should be processed as schema request.
-			 */
-			if (request.getBaseDN().length() == 0 ||
-					request.getBaseDN().equalsIgnoreCase("cn=Subschema") ) {
-				
-				/*
-				 * Schema requests usually have base DN set to empty string, "" value.
-				 */
-				return processSchemaRequest(messageID, request.getBaseDN(), request.getAttributes());
-				
-			}
-			
+
 			Entry entryData = Pegasus.myBackend.getEntry(dn);
 			
 			if (entryData != null) {
@@ -271,7 +246,7 @@ public class LdapSearchHandler {
 						
 						// Break execution of this method here. No need to go further.
 					    return new LDAPMessage(messageID, searchResultDoneProtocolOp,
-					            Collections.<Control>emptyList());
+					            StaticUtils.NO_CONTROLS);
 					}
 					
 				}
@@ -287,7 +262,7 @@ public class LdapSearchHandler {
 				 */
 			    return new LDAPMessage(messageID,
 			    		new SearchResultDoneProtocolOp(ResultCode.NO_SUCH_OBJECT_INT_VALUE, dn.toString(), null, null),
-			            Collections.<Control>emptyList());
+			            StaticUtils.NO_CONTROLS);
 			}
 
 		}
@@ -305,7 +280,7 @@ public class LdapSearchHandler {
 				// Base entry does not exist at all, finish with error result.
 			    return new LDAPMessage(messageID,
 			    		new SearchResultDoneProtocolOp(ResultCode.NO_SUCH_OBJECT_INT_VALUE, dn.toString(), null, null),
-			            Collections.<Control>emptyList());
+			            StaticUtils.NO_CONTROLS);
 
 			}
 			else {
@@ -365,7 +340,7 @@ public class LdapSearchHandler {
 				// Base entry does not exist at all, finish with error result.
 			    return new LDAPMessage(messageID,
 			    		new SearchResultDoneProtocolOp(ResultCode.NO_SUCH_OBJECT_INT_VALUE, dn.toString(), null, null),
-			            Collections.<Control>emptyList());
+			            StaticUtils.NO_CONTROLS);
 
 			}
 			else {
@@ -434,7 +409,7 @@ public class LdapSearchHandler {
 		}
 
 	    return new LDAPMessage(messageID, searchResultDoneProtocolOp,
-	            Collections.<Control>emptyList());
+	            StaticUtils.NO_CONTROLS);
 	}
 
 	/**
@@ -645,52 +620,11 @@ public class LdapSearchHandler {
 		
 		/*
 		 * Process schema request.
-		 *  
-		 * NOTE: This part of code is needed for applications that do schema queries,
-		 * like Miguelol.
 		 */
 
-		/*
-		 * First case: look for subschemasubentry item in attributes list.
-		 * If found, return something like:
-		 * 
-		 *  dn: o=ericsson,dc=com
-		 *  subschemaSubentry: cn=Subschema
-		 *  
-		 * built-in entry.  
-		 */
-		if (attributes != null) {
-			for (String attribute : attributes) {
-				
-				if (attribute.equalsIgnoreCase("subschemasubentry")) {
-					
-					try {
-						
-						// Form built-in entry here.
-						Entry subschemaSubentry = new Entry(
-								new DN(Pegasus.myBackend.getRootDN().toString()),
-								new Attribute("subschemaSubentry", "cn=Subschema"));
-						
-						// Send built-in entry.
-						SearchResultEntry searchEntry = new SearchResultEntry(subschemaSubentry);
-						sendSearchResultEntry(messageID, searchEntry, searchEntry.getControls());
-						
-						// Increment statistic.
-						Pegasus.entryResults++;
-						
-						// Break execution of this method here.
-					    return new LDAPMessage(messageID, searchResultDoneProtocolOp,
-					            Collections.<Control>emptyList());
-					} catch (LDAPException e) {
-						e.printStackTrace();
-					}
-				}
-
-			}
-		}
 		
 		/*
-		 * Second case: check if it is request for cn=Subschema.
+		 * Check if it is request for cn=Subschema.
 		 * If it is, return object classes and attributes.
 		 * 
 		 * NOTE: Attribute list in request actually define what objects LDAP server should return:
@@ -752,6 +686,6 @@ public class LdapSearchHandler {
 		}
 		
 	    return new LDAPMessage(messageID, searchResultDoneProtocolOp,
-	            Collections.<Control>emptyList());
+	            StaticUtils.NO_CONTROLS);
 	}
 }

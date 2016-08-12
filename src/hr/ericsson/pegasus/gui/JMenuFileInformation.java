@@ -7,7 +7,7 @@ import javax.swing.JMenuItem;
  * <HR>
  * Please refer to {@link ActionListenerFileInformation}.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class JMenuFileInformation extends JMenuItem {

@@ -14,7 +14,7 @@ import com.unboundid.ldap.sdk.SearchScope;
  *  <LI>SEARCH with scope BASE</LI>
  * </UL>
  * Test level: BASIC
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class TestCase01 extends LdapTestCase {
@@ -41,10 +41,9 @@ public class TestCase01 extends LdapTestCase {
 	private void test() throws LDAPException {
 		
 		/*
-		 * Simple SEARCH request with base DN set to:
-		 *  "o=ericsson,dc=com"
+		 * Simple SEARCH request.
 		 */
-		String baseDN = "o=ericsson,dc=com";
+		String baseDN = getBaseDN();
 		SearchScope scope = SearchScope.BASE;
 		Filter filter = Filter.create("(objectClass=*)");
 		String[] attributes = null;
@@ -55,7 +54,7 @@ public class TestCase01 extends LdapTestCase {
 		
 		for ( SearchResultEntry entry : searchResult.getSearchEntries())
 		{
-			if (entry.hasAttributeValue("o", "ericsson") )
+			if (entry.getAttributes().size() > 1)
 			{
 				setVerdict(PASS);
 			}

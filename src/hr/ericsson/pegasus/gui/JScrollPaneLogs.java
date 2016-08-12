@@ -8,7 +8,7 @@ import javax.swing.JScrollPane;
  * This panel has a text area where log messages are printed.<BR>
  * See {@link JFrameGui}, functions <I>append(String)</I> and <I>log(String)</I>.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class JScrollPaneLogs extends JScrollPane {

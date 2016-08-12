@@ -15,7 +15,7 @@ import java.util.TreeMap;
  * Once LDIF file is examined, result is stored in cache for faster
  * reading in future. See {@link #CACHE_FILE} variable.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class DetermineNumberOfEntries {

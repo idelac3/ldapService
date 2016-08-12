@@ -15,7 +15,7 @@ import javax.swing.JFileChooser;
  * This action defined here will load LDIF file, see {@link Pegasus#myBackend}.
  * Backend Service will have additional entries from newly added LDIF file.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class ActionListenerLDIFImportFile implements ActionListener {

@@ -1,20 +1,12 @@
 package hr.ericsson.pegasus;
 
-import hr.ericsson.pegasus.DetermineEntryCount.DetermineNumberOfEntries;
-import hr.ericsson.pegasus.backend.ConcurrentBackend;
-import hr.ericsson.pegasus.encoders.MessageDecoder;
-import hr.ericsson.pegasus.encoders.MessageEncoder;
-import hr.ericsson.pegasus.gui.JFrameGui;
-import hr.ericsson.pegasus.handler.MessageHandler;
-import hr.ericsson.pegasus.multicast.MulticastListener;
-import hr.ericsson.pegasus.welcome.JFrameWelcome;
-
 import java.awt.EventQueue;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -27,7 +19,18 @@ import java.util.List;
 import javax.swing.SwingUtilities;
 
 import com.unboundid.ldap.sdk.Entry;
-import com.unboundid.util.Debug;
+import com.unboundid.ldap.sdk.LDAPException;
+import com.unboundid.ldap.sdk.schema.Schema;
+import com.unboundid.ldif.LDIFException;
+
+import hr.ericsson.pegasus.DetermineEntryCount.DetermineNumberOfEntries;
+import hr.ericsson.pegasus.backend.ConcurrentBackend;
+import hr.ericsson.pegasus.encoders.MessageDecoder;
+import hr.ericsson.pegasus.encoders.MessageEncoder;
+import hr.ericsson.pegasus.gui.JFrameGui;
+import hr.ericsson.pegasus.handler.MessageHandler;
+import hr.ericsson.pegasus.multicast.MulticastListener;
+import hr.ericsson.pegasus.welcome.JFrameWelcome;
 
 /**
  * <H1>Pegasus</H1>
@@ -51,7 +54,7 @@ import com.unboundid.util.Debug;
  * </OL>
  * To use this program properly, see {@link Pegasus#usage()} function where other arguments are explained.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class Pegasus {
@@ -99,6 +102,11 @@ public class Pegasus {
 	public static SchemaReader schemaReader;
 	
 	/**
+	 * Schema instance for validation of LDAP operations.
+	 */
+	public static Schema schema;
+	
+	/**
 	 * Size limit for LDAP search operations (one level, whole subtree). 
 	 */
 	public static int countLimit = 100;
@@ -120,6 +128,23 @@ public class Pegasus {
 	 * If <I>null</I>, synchronization is disabled.
 	 */
 	public static MulticastListener multicastSync = null;
+	
+	/**
+	 * Flag to show if user wants print of each LDAP request / message
+	 * on console or window.
+	 */
+	public static boolean debugEnabled = false;
+	
+	/**
+	 * A value set only once when this application has started.
+	 * Should be used as:
+	 * <PRE>
+	 *  currentTime = System.currentTimeMillis() - uptime;
+	 * </PRE>
+	 * to get uptime of this application in milliseconds. See {@link System#currentTimeMillis()}
+	 * for more information.
+	 */
+	public static long uptime;
 	
 	public static void main(String[] args) throws IOException, InterruptedException {
 
@@ -183,7 +208,12 @@ public class Pegasus {
 		if (op.isSwitch("--ldifFiles")) {
 			ldifFiles = op.getSwitch("--ldifFiles");
 		}
-		
+
+		boolean stdSchema = false;
+		if (op.isSwitch("--std-schema")) {
+			stdSchema = true;
+		}
+
 		String schemaFiles = "";
 		if (op.isSwitch("--schemaFiles")) {
 			schemaFiles = op.getSwitch("--schemaFiles");
@@ -216,16 +246,11 @@ public class Pegasus {
 			
 		}
 		
-		boolean disableLdapFilter = false;
-		if (op.isSwitch("--disableLdapFilter")) {
-			disableLdapFilter = true;
-		}
-		
 		if (op.isSwitch("--debug")) {
 			/*
-			 *  Turn on debugging using UnboundID library, Debug facility.
+			 *  Turn on debugging on console or window.
 			 */
-			Debug.setEnabled(true);
+			debugEnabled = true;
 		}
 		
 		Runnable guiRunnable = new Runnable() {
@@ -283,6 +308,7 @@ public class Pegasus {
 		else {
 			log("  Ldif files: - ");
 		}
+		log("     Root DN: " + findRootDN(fileList));
 		log("Schema files: " + schemaFiles);
 		log(" Count limit: " + countLimit);
 		log("");
@@ -296,6 +322,126 @@ public class Pegasus {
         	log("Multicast group and port are " + multicastSyncGroup + ":" + multicastSyncPort + ".");
         	log("");
         }
+        
+		/*
+		 * Import schema files.
+		 */
+        
+        List<String> invalidSchemaFileList = new ArrayList<String>();
+        
+        if (stdSchema) {
+        	/*
+        	 * Load first standard schema definition 
+        	 * from UnboundID library.
+        	 */
+        	try {
+				schema = Schema.getDefaultStandardSchema();
+			} catch (LDAPException e) {
+				Pegasus.debug("ERROR: Standard schema is not loaded.");
+				e.printStackTrace();
+			}
+        }
+        
+		if (schemaFiles.length() > 0) {
+			schemaReader = new SchemaReader();
+			for (String schemaFile : schemaFiles.split(",")) {
+				File schema = new File(schemaFile);
+				if (schema.exists()) {
+					if (schema.isFile()) {
+						
+						/*
+						 * Load schema file into SchemaReader first.
+						 */
+						try {
+							schemaReader.loadSchemaFile(schema);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+			
+						/*
+						 * Then load into Schema instance.
+						 */
+						try {
+							if (Pegasus.schema == null) {
+								Pegasus.schema = Schema.getSchema(schema);
+							}
+							else {
+								Pegasus.schema = Schema.mergeSchemas(Pegasus.schema, Schema.getSchema(schema));
+							}
+						} catch (LDIFException e) {
+							invalidSchemaFileList.add(schemaFile);
+						}
+						
+					}
+					else if (schema.isDirectory()) {
+						/*
+						 * Support for folder with *.schema files.
+						 */
+						for (String dirItem : schema.list()) {
+							if (dirItem.endsWith(".schema") || dirItem.endsWith(".ldif")) {
+								File schemaItem = new File(schema.getName() + "/" + dirItem);
+								if (schemaItem.isFile()) {
+						
+									try {
+										schemaReader.loadSchemaFile(schemaItem);
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+									
+									try {
+										if (Pegasus.schema == null) {
+											Pegasus.schema = Schema.getSchema(schema);
+										}
+										else {
+											Pegasus.schema = Schema.mergeSchemas(Pegasus.schema, Schema.getSchema(schema));
+										}
+									} catch (LDIFException e) {
+										invalidSchemaFileList.add(schemaFile);
+									}
+									
+								}
+							}
+						}
+					}
+					else {
+						log("Schema file " + schemaFile + " is neither file nor directory.");
+					}
+				}
+				else {
+					log("Schema file " + schemaFile + " not found.");
+				}
+			}
+		}
+		else {
+			schemaReader = null;
+		}
+		
+		/*
+		 * Write schema into single file according to RFC 4512.
+		 * Ref. http://www.zytrax.com/books/ldap/ch3/
+		 */
+		if (schemaReader != null && invalidSchemaFileList.size() > 0) {
+			
+			/*
+			 * Looks like some schema files are not in LDIF format,
+			 * try to convert into LDIF every single file in system temp.
+			 * folder. Then load it with Schema.getSchema(...) method.
+			 */
+			for (String filename : invalidSchemaFileList) {
+			
+				String tmpFilename = convertSchemaFile(filename);
+
+				Pegasus.debug("Schema file " + filename + " converted to LDIF format in " + tmpFilename + ".");
+				
+				try {
+					schema = Schema.getSchema(tmpFilename);
+				} catch (LDIFException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+					
+			}	
+		}
         
 		/*
 		 * Determine initial capacity for backend service based on 
@@ -373,15 +519,6 @@ public class Pegasus {
 		}
 		
 		/*
-		 * Print root DN value.
-		 */
-		log ("");
-		log ("*****************************************************************");
-		log ("        Root DN: " + myBackend.getRootDN().toString());
-		log ("*****************************************************************");
-		log ("");
-		
-		/*
 		 * Print warning if no LDIF files were loaded. 
 		 */
 		if (totalEntries == 0) {
@@ -390,51 +527,6 @@ public class Pegasus {
 			log ("WARNING: Load at least one LDIF file to populate LDAP database.");
 			log ("*****************************************************************");
 			log ("");
-		}
-
-		/*
-		 * Import schema files.
-		 */
-		if (schemaFiles.length() > 0) {
-			schemaReader = new SchemaReader();
-			for (String schemaFile : schemaFiles.split(",")) {
-				File schema = new File(schemaFile);
-				if (schema.exists()) {
-					if (schema.isFile()) {
-						try {
-							schemaReader.loadSchemaFile(schema);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-					else if (schema.isDirectory()) {
-						/*
-						 * Support for folder with *.schema files.
-						 */
-						for (String dirItem : schema.list()) {
-							if (dirItem.endsWith(".schema")) {
-								File schemaItem = new File(schema.getName() + "/" + dirItem);
-								if (schemaItem.isFile()) {
-									try {
-										schemaReader.loadSchemaFile(schemaItem);
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
-								}
-							}
-						}
-					}
-					else {
-						log("Schema file " + schemaFile + " is neither file nor directory.");
-					}
-				}
-				else {
-					log("Schema file " + schemaFile + " not found.");
-				}
-			}
-		}
-		else {
-			schemaReader = null;
 		}
 		
 		String[] socketList = bindSockets.split(",");
@@ -475,7 +567,7 @@ public class Pegasus {
 
 			ClientListener listener = new ClientListener(
 					address, port, 
-					aliasDeref, disableLdapFilter);
+					aliasDeref);
 			
 			/*
 			 * Turn on SSL if needed.
@@ -546,8 +638,104 @@ public class Pegasus {
 				log("Ldap service terminated.");
 			}
 		});
+		
+		/*
+		 * Set uptime to current time.
+		 */
+		uptime = System.currentTimeMillis();
+		
 	}	 
 
+	/**
+	 * Convert OpenLDAP schema file into LDIF schema file.
+	 * 
+	 * @param filename input schema file
+	 * @return full path to resulting LDIF schema file
+	 * 
+	 * @throws IOException
+	 */
+	public static String convertSchemaFile(String filename) throws IOException {
+	
+		SchemaReader schemaReader = new SchemaReader();
+		schemaReader.loadSchemaFile(new File(filename));
+		
+		String tmpDir = System.getProperty("java.io.tmpdir");
+		File tmpSchemaFile = new File(tmpDir + "/" + filename);
+		FileWriter fileWriter = new FileWriter(tmpSchemaFile);
+		fileWriter.write(schemaReader.toLDIF());
+		fileWriter.close();
+		
+		return tmpSchemaFile.getAbsolutePath();
+	}
+	
+	/**
+	 * Find an root DN string from LDIF file list.<BR>
+	 * Items are LDIF files, and one that has shortest 'dn: ....'
+	 * should be base LDIF and should be loaded first.  
+	 * @param fileList list array with LDIF files
+	 * @return base DN value if list is not empty, or <I>null</I> value
+	 * @throws IOException
+	 */
+	public static String findRootDN(List<String> fileList) throws IOException {
+	
+		String baseDN = null;
+		
+		if (fileList == null) {
+			log ("LDIF file list is null. Please fill it with valid LDIFs.");
+			return null;
+		}
+		
+		for (String filename : fileList) {
+			
+			try {
+			
+				BufferedReader br = new BufferedReader(new FileReader(filename));
+				
+				String line;
+				
+				int dnCounter = 0;
+				
+				while ( (line = br.readLine()) != null) {
+				
+					/*
+					 * Look for 'dn: ' in each line.
+					 */
+					if (line.startsWith("dn: ")) {
+
+						String dn = line.substring("dn: ".length());
+						
+						/*
+						 * If shorter DN value is found, then assign it.
+						 */
+						if (baseDN == null) {
+							baseDN = dn;
+						}
+						else if (baseDN.length() > dn.length()) {
+							baseDN = dn;
+						}
+						
+						if (dnCounter > 10) {
+							/*
+							 * Don't process more than first 10 DN values in LDIF.
+							 */
+							break;
+						}
+						
+						dnCounter++;
+					}
+				}				
+				
+				br.close();
+				
+			} catch (FileNotFoundException ex) {
+				log ("File " + filename + " not found.");
+			}
+		}
+		
+		return baseDN;
+		
+	}
+	
 	/**
 	 * Dereference items starting with @ char from LDIF file list.<BR>
 	 * Items that have @ char in beginning are text files that contain
@@ -631,7 +819,7 @@ public class Pegasus {
 	 * @param msg a line of text
 	 */
 	public static void debug(String msg) {
-		if (Debug.debugEnabled()) {
+		if (debugEnabled) {
 			log (msg);
 		}
 	}
@@ -827,7 +1015,10 @@ public class Pegasus {
 				+ "  --keyPassword [secret string    ]   for --key provide access password. Default: ''\n"
 				+ "\n"
 				+ "  --ldifFiles   [file1,file2, ... ]  ldif file list. If not provided, database will be empty.\n"
-				+ "  --schemaFiles [file1,file2, ... ]  OpenLDAP schema file list. If omitted, schemas are not used.\n"
+				+ "\n"
+				+ "  --std-schema                       Use standard schema definition. This is recommended to use.\n"
+				+ "  --schemaFiles [file1,file2, ... ]  LDIF or OpenLDAP schema file list. If omitted, schemas are not used.\n"
+				+ "\n"
 				+ "  --modifyFile  [myModify.ldif    ]  ldif file to save modifications on entries. Default: modify.ldif\n"
 				+ "\n"
 				+ "  --countLimit  [0 .. 100000      ]  max. number of entries to return on search. Default: 0 (disabled, client controled)\n"
@@ -837,8 +1028,7 @@ public class Pegasus {
 				+ "  --multicastSyncPort  [udp port  ]  multicast port number for multicast synchronization. Eg. 7100 \n"
 				+ "\n"
 				+ "  --gui                              if set, Pegasus will try to open a window (requires Windows/X11 system).\n"
-				+ "  --debug                            if set, console will fill up with INFO messages for every ldap request.\n"
-				+ "  --disableLdapFilter                if set, filter in LDAP SEARCH request will be ignored.\n"
+				+ "  --debug                            if set, console will fill up with debug information for every LDAP request / message.\n"
 				+ "\n"
 				+ "Author: Igor Delac <igor.delac@gmail.com>\n"
 				+ "\n";

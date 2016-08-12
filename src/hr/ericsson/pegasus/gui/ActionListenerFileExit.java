@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
  * <HR>
  * This action defined here will terminate {@link Pegasus} application.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class ActionListenerFileExit implements ActionListener {

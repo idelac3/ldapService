@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
  * This action defined here will clear variables in {@link Pegasus}
  * which hold statistic data. For more information, see {@link JScrollPaneStat}.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class ActionListenerStatisticClear implements ActionListener {

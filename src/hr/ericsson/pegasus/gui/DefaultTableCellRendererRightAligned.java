@@ -16,7 +16,7 @@ import javax.swing.table.TableColumn;
  *     setCellRenderer(new DefaultTableCellRendererRightAligned());
  * </PRE>
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class DefaultTableCellRendererRightAligned extends DefaultTableCellRenderer {

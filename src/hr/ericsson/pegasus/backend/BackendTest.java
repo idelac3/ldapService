@@ -18,7 +18,7 @@ import com.unboundid.ldif.LDIFException;
  * to run this program after each significant change in program code of {@link ConcurrentBackend}
  * class.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class BackendTest {

@@ -20,7 +20,7 @@ import javax.swing.JTextArea;
  * Methods in {@link Pegasus} use functions {@link #log(String)} and
  * {@link #append(String)} for printing messages to Console Log {@link JScrollPaneLogs}.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class JFrameGui extends JFrame {

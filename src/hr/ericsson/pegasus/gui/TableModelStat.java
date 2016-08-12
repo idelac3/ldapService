@@ -10,7 +10,7 @@ import javax.swing.table.AbstractTableModel;
  * This Table Model is used by {@link JTableStat} table
  * to show statistic data.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class TableModelStat extends AbstractTableModel {

@@ -18,7 +18,7 @@ import com.unboundid.ldap.sdk.LDAPException;
  * look at <A HREF=http://netty.io/5.0/api/io/netty/handler/codec/ByteToMessageDecoder.html>Netty, User Guide, ByteToMessageDecoder</A>
  * <P>This class is used by {@link ClientListener} class internally.</P>
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  */
 public class MessageDecoder extends ByteToMessageDecoder {
 		

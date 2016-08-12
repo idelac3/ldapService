@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
  * which hold statistic data and apply them to {@link TableModelStat}.<BR>
  *  For more information, see {@link JScrollPaneStat}.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class ActionListenerRefresh implements ActionListener {

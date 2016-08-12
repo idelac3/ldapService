@@ -7,7 +7,7 @@ import javax.swing.JMenu;
 /**
  * <H1>File, Menu Item</H1>
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class JMenuFile extends JMenu {

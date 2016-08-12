@@ -2,13 +2,13 @@ package hr.ericsson.pegasus.gui;
 
 import javax.swing.JCheckBoxMenuItem;
 
-import com.unboundid.util.Debug;
+import hr.ericsson.pegasus.Pegasus;
 
 
 /**
  * <H1>Debugging enabled, Menu Item</H1>
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 
@@ -18,7 +18,7 @@ public class JMenuDebugEnabled extends JCheckBoxMenuItem {
 
 	public JMenuDebugEnabled() {
 		setText("Debugging enabled");
-		setSelected(Debug.debugEnabled());
+		setSelected(Pegasus.debugEnabled);
 		addActionListener(
 				new ActionListenerDebugEnabled());
 	}

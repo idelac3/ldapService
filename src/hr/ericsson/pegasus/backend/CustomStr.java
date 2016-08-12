@@ -11,7 +11,7 @@ import java.util.Arrays;
  * <BR>
  * This class has {@link Comparable} interface implemented. 
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class CustomStr implements Comparable<CustomStr> {

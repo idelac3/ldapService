@@ -11,7 +11,7 @@ import javax.swing.Timer;
  * Shows statistic data collected by {@link Pegasus}
  * and refresh every 1 sec.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class JTableStat extends JTable {

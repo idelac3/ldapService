@@ -5,7 +5,7 @@ import javax.swing.JMenu;
 /**
  * <H1>Debug, Menu Item</H1>
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 

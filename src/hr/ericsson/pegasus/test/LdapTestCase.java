@@ -3,12 +3,15 @@ package hr.ericsson.pegasus.test;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.unboundid.ldap.sdk.LDAPConnection;
+import com.unboundid.ldap.sdk.LDAPSearchException;
+import com.unboundid.ldap.sdk.SearchResult;
+import com.unboundid.ldap.sdk.SearchScope;
 
 /**
  * <H1>LDAP Test case</H1>
  * Test cases should be independent from each other, runnable in thread, have unique ID value, etc.
  * 
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public abstract class LdapTestCase extends TestCase implements Runnable {
@@ -40,6 +43,27 @@ public abstract class LdapTestCase extends TestCase implements Runnable {
 	protected static AtomicInteger error = new AtomicInteger(0);
 
 	private boolean verdictSet = false;
+	
+	private String baseDN = null;
+	
+	/**
+	 * Read root DN from LDAP server.
+	 * 
+	 * @return root DN string (eg. o=company,dc=com)
+	 */
+	public String getBaseDN() {
+		if (baseDN == null) {
+			try {
+				SearchResult searchResult = ldapConnection.search("", SearchScope.BASE, "(objectClass=*)", "namingcontexts");
+				baseDN = searchResult.getSearchEntries().get(0).getAttribute("namingcontexts").getValue();
+			} catch (LDAPSearchException e) {
+				baseDN = "";
+				e.printStackTrace();				
+			}
+		}
+			
+		return baseDN;
+	}
 	
 	@Override
 	public void setVerdict(int verdict) {

@@ -13,10 +13,13 @@ public class AddSubEntry {
 	 * This function performs LDAP ADD operation.
 	 */
 	public static LDAPResult addSubEntry(LDAPConnection ldapConnection, int id, int subId) throws LDAPException {
+		
+		String rootDN = LdapFunctionTest.getDN();
+		
 		Attribute objectClass = new Attribute("objectClass", "top", "UserContainer");
 		Attribute applicationName = new Attribute("UserContainerName", "MOD" + subId);
 		
-		Entry entry = new Entry("UserContainerName=MOD" + subId + ",ApplicationName=APP" + id + ",o=ericsson,dc=com", objectClass, applicationName);
+		Entry entry = new Entry("UserContainerName=MOD" + subId + ",ApplicationName=APP" + id + "," + rootDN, objectClass, applicationName);
 	
 		LDAPResult result = ldapConnection.add(entry);
 		return result;

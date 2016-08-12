@@ -11,7 +11,7 @@ import com.unboundid.ldap.sdk.schema.Schema;
  *  <LI>SEARCH with base DN set to <I>cn=Subschema</I> value</LI>
  * </UL>
  * Test level: BASIC
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class TestCase08 extends LdapTestCase {

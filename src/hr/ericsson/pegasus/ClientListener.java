@@ -34,7 +34,7 @@ import io.netty.util.NetUtil;
  * look at <A HREF=http://netty.io/wiki/user-guide-for-5.x.html#wiki-h2-5>Netty, User Guide</A>
  * <P>To use this class, run it in separate thread.</P>
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  */
 public class ClientListener implements Runnable {
 
@@ -88,7 +88,7 @@ public class ClientListener implements Runnable {
      * then apply modification(s)
      */
     public ClientListener(String host, int port, 
-    		final boolean aliasDeref, final boolean disableLdapFilter) {
+    		final boolean aliasDeref) {
     	
     	this.host = host;
         this.port = port;
@@ -159,7 +159,7 @@ public class ClientListener implements Runnable {
             		 * Use message handler without multicast sync. feature.
             		 */
                 	channelPipeline.addLast(
-                			new MessageHandler(aliasDeref, disableLdapFilter));            	
+                			new MessageHandler(aliasDeref));            	
 
                 	Pegasus.debug("MessageHandler instance loaded.");
             	}
@@ -168,7 +168,7 @@ public class ClientListener implements Runnable {
             		 * Use message handler with multicast sync. feature.
             		 */
             		channelPipeline.addLast(
-                			new MessageHandlerMulticastSync(aliasDeref, disableLdapFilter));
+                			new MessageHandlerMulticastSync(aliasDeref));
             		
             		Pegasus.debug("MessageHandler instance with multicast synchronization loaded.");
             	}

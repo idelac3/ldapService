@@ -1,5 +1,14 @@
 package hr.ericsson.pegasus.handler;
 
+import java.util.List;
+
+import com.unboundid.asn1.ASN1Buffer;
+import com.unboundid.ldap.protocol.BindResponseProtocolOp;
+import com.unboundid.ldap.protocol.LDAPMessage;
+import com.unboundid.ldap.protocol.ProtocolOp;
+import com.unboundid.ldap.sdk.ResultCode;
+import com.unboundid.util.StaticUtils;
+
 import hr.ericsson.pegasus.Pegasus;
 import hr.ericsson.pegasus.backend.TransferBackendData;
 import hr.ericsson.pegasus.multicast.MulticastDatagramHandler;
@@ -7,16 +16,6 @@ import hr.ericsson.pegasus.multicast.MulticastListener;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
-
-import java.util.Collections;
-import java.util.List;
-
-import com.unboundid.asn1.ASN1Buffer;
-import com.unboundid.ldap.protocol.BindResponseProtocolOp;
-import com.unboundid.ldap.protocol.LDAPMessage;
-import com.unboundid.ldap.protocol.ProtocolOp;
-import com.unboundid.ldap.sdk.Control;
-import com.unboundid.ldap.sdk.ResultCode;
 
 /**
  * This is sub-class of {@link MessageHandler} class.<BR>
@@ -40,15 +39,15 @@ import com.unboundid.ldap.sdk.ResultCode;
  * recovery of broken peers. It is not allowed to use message handler with multicast sync. enabled, and if that
  * happens, LDAP BIND request will be denied. 
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class MessageHandlerMulticastSync extends MessageHandler {
 
 	private ASN1Buffer asn1buffer;
 	
-	public MessageHandlerMulticastSync(boolean aliasDeref, boolean disableLdapFilter) {
-		super(aliasDeref, disableLdapFilter);
+	public MessageHandlerMulticastSync(boolean aliasDeref) {
+		super(aliasDeref);
 		asn1buffer = new ASN1Buffer();
 	}
 	
@@ -80,7 +79,7 @@ public class MessageHandlerMulticastSync extends MessageHandler {
     				diagnosticMessage, referralURLs, null);
 
     			LDAPMessage ldapResponse = new LDAPMessage(messageID, bindResponseProtocolOp,
-    	            Collections.<Control>emptyList());
+    					StaticUtils.NO_CONTROLS);
     		
     			ctx.writeAndFlush(ldapResponse);
 

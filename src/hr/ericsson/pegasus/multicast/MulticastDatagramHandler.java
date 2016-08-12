@@ -35,7 +35,7 @@ import com.unboundid.ldap.sdk.LDAPException;
  * <BR>
  * This class borrows some code from {@link MessageDecoder} and {@link MessageHandler} classes.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  */
 public class MulticastDatagramHandler extends SimpleChannelInboundHandler<DatagramPacket>  {
 	

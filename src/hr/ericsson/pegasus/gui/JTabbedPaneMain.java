@@ -8,7 +8,7 @@ import javax.swing.JTabbedPane;
  * Holds panel for <I>Log Console</I> {@link JScrollPaneLogs} 
  *  and <I>Statistic data</I> {@link JScrollPaneStat}.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class JTabbedPaneMain extends JTabbedPane {

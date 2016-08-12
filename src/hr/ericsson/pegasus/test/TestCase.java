@@ -1,5 +1,11 @@
 package hr.ericsson.pegasus.test;
 
+/**
+ * Test Case template class.
+ * 
+ * @author igor.delac@gmail.com
+ *
+ */
 public abstract class TestCase {
 
 	static final public int PASS = 0;

@@ -10,7 +10,7 @@ import javax.swing.filechooser.FileFilter;
  * For Open dialog, file extension filter.<BR>
  * See {@link ActionListenerLDIFImportFile} code.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class LdifFileFilter extends FileFilter{

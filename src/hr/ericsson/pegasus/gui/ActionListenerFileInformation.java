@@ -1,8 +1,5 @@
 package hr.ericsson.pegasus.gui;
 
-import hr.ericsson.pegasus.ClientListener;
-import hr.ericsson.pegasus.Pegasus;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -11,14 +8,15 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import com.unboundid.util.Debug;
+import hr.ericsson.pegasus.ClientListener;
+import hr.ericsson.pegasus.Pegasus;
 
 /**
  * <H1>Information, ActionListener</H1>
  * <HR>
  * This action defined here will show dialog with various system information.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class ActionListenerFileInformation implements ActionListener {
@@ -33,7 +31,8 @@ public class ActionListenerFileInformation implements ActionListener {
 				"System information",
 				"    CPU core count: " + Runtime.getRuntime().availableProcessors(),
 				"  Available memory: " + Pegasus.formatInteger(Runtime.getRuntime().freeMemory()),
-				" Debugging enabled: " + (Debug.debugEnabled() ? "yes" : "no"),
+				" Debugging enabled: " + (Pegasus.debugEnabled ? "yes" : "no"),
+				"            Uptime: " + Pegasus.formatTime(System.currentTimeMillis() - Pegasus.uptime),
 				" ",
 		};
 		

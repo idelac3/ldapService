@@ -4,8 +4,8 @@ import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.SearchResultEntry;
 
 /**
- * <H1>TestCase12</H1>
- * This test case will test LDAP operations with empty DN:
+ * <H1>TestCase13</H1>
+ * This test case will test LDAP operations with invalid DN:
  * <UL>
  *  <LI>SEARCH</LI>
  * </UL>
@@ -13,13 +13,13 @@ import com.unboundid.ldap.sdk.SearchResultEntry;
  * @author igor.delac@gmail.com
  *
  */
-public class TestCase12 extends LdapTestCase {
+public class TestCase13 extends LdapTestCase {
 
 	/**
-	 * {@link TestCase12}
+	 * {@link TestCase13}
 	 */
-	public TestCase12() {
-		id = 12;
+	public TestCase13() {
+		id = 13;
 		setName("TestCase" + id);
 	}
 	
@@ -37,10 +37,10 @@ public class TestCase12 extends LdapTestCase {
 	private void test() throws LDAPException {
 
 		/*
-		 * Perform LDAP search operation with base DN set to empty value.
+		 * Perform LDAP search operation with base DN set to wrong value.
 		 */
 		try {
-			SearchResultEntry result = ldapConnection.getEntry("");
+			SearchResultEntry result = ldapConnection.getEntry("o=company,dc=com");
 			if (result == null)
 			{
 				setVerdict(PASS);

@@ -55,7 +55,7 @@ import java.util.List;
  * <BR>
  * This class is known to be working on all operating systems (Solaris / Linux / Windows).
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class MulticastListener {

@@ -2,14 +2,12 @@ package hr.ericsson.pegasus.gui;
 
 import javax.swing.JMenuBar;
 
-import com.unboundid.util.Debug;
-
 /**
  * <H1>Main Menu Bar</H1>
  * <HR>
  * Menu bar for {@link JMenuFile}, {@link JMenuLDIF}, {@link JMenuDebug}, {@link JMenuStatistic} ... etc.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 
@@ -21,9 +19,6 @@ public class JMenuBarMain extends JMenuBar {
 		add(new JMenuFile());
 		add(new JMenuLDIF());
 		add(new JMenuStatistic());
-		if (Debug.debugEnabled()) {
-			add(new JMenuDebug());
-		}
-			
+		add(new JMenuDebug());			
 	}
 }

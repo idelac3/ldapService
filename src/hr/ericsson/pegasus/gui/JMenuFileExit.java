@@ -7,7 +7,7 @@ import javax.swing.JMenuItem;
  * <HR>
  * Please refer to {@link ActionListenerFileExit}.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class JMenuFileExit extends JMenuItem {

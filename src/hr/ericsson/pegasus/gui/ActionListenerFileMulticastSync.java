@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
  * <HR>
  * This action defined here will trigger join / leave of {@link Pegasus#multicastSync} instance.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class ActionListenerFileMulticastSync implements ActionListener {

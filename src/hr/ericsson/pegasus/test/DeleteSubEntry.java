@@ -12,7 +12,9 @@ public class DeleteSubEntry {
 	 */
 	public static LDAPResult delSubEntry(LDAPConnection ldapConnection, int id, int subId) throws LDAPException {
 		
-		LDAPResult result = ldapConnection.delete("UserContainerName=MOD" + subId + ",ApplicationName=APP" + id + ",o=ericsson,dc=com");
+		String rootDN = LdapFunctionTest.getDN();
+		
+		LDAPResult result = ldapConnection.delete("UserContainerName=MOD" + subId + ",ApplicationName=APP" + id + "," + rootDN);
 		return result;
 
 	}

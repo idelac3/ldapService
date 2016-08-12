@@ -19,11 +19,11 @@ import com.unboundid.ldif.LDIFReader;
  * LDAP Backend to hold LDAP data.<BR>
  * Data are usually loaded by {@link ConcurrentBackend#ldifRead(File)} function.<BR>
  * <BR>
- * This class is has to be <B>thread-safe</B>, since this application has to support high level
+ * This class has to be <B>thread-safe</B>, since this application supports high level
  * of concurrency. It is very probably that at least few different threads will try to modify data
  * on this (single) backend instance. 
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class ConcurrentBackend {
@@ -386,8 +386,24 @@ public class ConcurrentBackend {
 	private List<CustomStr> getBranchArray(CustomStr dn) {
 		List<CustomStr> retVal = new ArrayList<CustomStr>();
 		while (!dn.equals(rootDN)) {
+			
+			// Take current length of DN.
+			int currentDNlength = dn.length();
+			
+			// Calculate parent DN, do a trim of leaf item in DN.
 			dn = getParentDN(dn);
-			retVal.add(0, getRDN(dn));
+			
+			// Take new length of DN.
+			int newDNlength = dn.length();
+			
+			// Should be shorter.
+			if (newDNlength < currentDNlength) {
+				retVal.add(0, getRDN(dn));
+			}
+			else {
+				// If not, break this loop.
+				break;
+			}
 		}
 		return retVal;
 	}

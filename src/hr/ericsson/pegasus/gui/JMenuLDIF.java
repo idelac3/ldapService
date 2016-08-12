@@ -5,7 +5,7 @@ import javax.swing.JMenu;
 /**
  * <H1>LDIF, SubMenu Item</H1>
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 

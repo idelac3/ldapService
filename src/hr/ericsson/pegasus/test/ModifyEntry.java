@@ -26,7 +26,9 @@ public class ModifyEntry {
 				new Modification(ModificationType.ADD, "NodeIdentity", "value1"),
 		};
 		
-		LDAPResult result = ldapConnection.modify("APP=" + id + ",o=ericsson,dc=com", mod);
+		String rootDN = LdapFunctionTest.getDN();
+		
+		LDAPResult result = ldapConnection.modify("APP=" + id + "," + rootDN, mod);
 		return result;
 
 	}
@@ -41,7 +43,9 @@ public class ModifyEntry {
 				new Modification(ModificationType.DELETE, "cn", "value2"),
 		};
 		
-		LDAPResult result = ldapConnection.modify("APP=" + id + ",o=ericsson,dc=com", mod);
+		String rootDN = LdapFunctionTest.getDN();
+		
+		LDAPResult result = ldapConnection.modify("APP=" + id + "," + rootDN, mod);
 		return result;
 
 	}
@@ -56,7 +60,9 @@ public class ModifyEntry {
 				new Modification(ModificationType.REPLACE, "NodeIdentity", "value3"),
 		};
 		
-		LDAPResult result = ldapConnection.modify("APP=" + id + ",o=ericsson,dc=com", mod);
+		String rootDN = LdapFunctionTest.getDN();
+		
+		LDAPResult result = ldapConnection.modify("APP=" + id + "," + rootDN, mod);
 		return result;
 
 	}
@@ -73,7 +79,9 @@ public class ModifyEntry {
 				new Modification(ModificationType.ADD, "NodeIdentity", "value1"),
 		};
 		
-		LDAPResult result = ldapConnection.modify("ApplicationName=APP" + id + ",o=ericsson,dc=com", mod);
+		String rootDN = LdapFunctionTest.getDN();
+		
+		LDAPResult result = ldapConnection.modify("ApplicationName=APP" + id + "," + rootDN, mod);
 		return result;
 
 	}
@@ -89,7 +97,9 @@ public class ModifyEntry {
 				new Modification(ModificationType.ADD, "cn", "value2"),
 		};
 		
-		LDAPResult result = ldapConnection.modify("UserContainerName=MOD" + subId + ",ApplicationName=APP" + id + ",o=ericsson,dc=com", mod);
+		String rootDN = LdapFunctionTest.getDN();
+		
+		LDAPResult result = ldapConnection.modify("UserContainerName=MOD" + subId + ",ApplicationName=APP" + id + "," + rootDN, mod);
 		return result;
 
 	}
@@ -104,7 +114,9 @@ public class ModifyEntry {
 				new Modification(ModificationType.DELETE, "cn", "value2"),
 		};
 		
-		LDAPResult result = ldapConnection.modify("ApplicationName=APP" + id + ",o=ericsson,dc=com", mod);
+		String rootDN = LdapFunctionTest.getDN();
+		
+		LDAPResult result = ldapConnection.modify("ApplicationName=APP" + id + "," + rootDN, mod);
 		return result;
 
 	}
@@ -119,7 +131,9 @@ public class ModifyEntry {
 				new Modification(ModificationType.DELETE, "cn", "value2"),
 		};
 		
-		LDAPResult result = ldapConnection.modify("UserContainerName=MOD" + subId + ",ApplicationName=APP" + id + ",o=ericsson,dc=com", mod);
+		String rootDN = LdapFunctionTest.getDN();
+		
+		LDAPResult result = ldapConnection.modify("UserContainerName=MOD" + subId + ",ApplicationName=APP" + id + "," + rootDN, mod);
 		return result;
 
 	}
@@ -134,7 +148,9 @@ public class ModifyEntry {
 				new Modification(ModificationType.REPLACE, "NodeIdentity", "value3"),
 		};
 		
-		LDAPResult result = ldapConnection.modify("ApplicationName=APP" + id + ",o=ericsson,dc=com", mod);
+		String rootDN = LdapFunctionTest.getDN();
+		
+		LDAPResult result = ldapConnection.modify("ApplicationName=APP" + id + "," + rootDN, mod);
 		return result;
 
 	}
@@ -149,7 +165,9 @@ public class ModifyEntry {
 				new Modification(ModificationType.REPLACE, "cn", "value3"),
 		};
 		
-		LDAPResult result = ldapConnection.modify("UserContainerName=MOD" + subId + ",ApplicationName=APP" + id + ",o=ericsson,dc=com", mod);
+		String rootDN = LdapFunctionTest.getDN();
+		
+		LDAPResult result = ldapConnection.modify("UserContainerName=MOD" + subId + ",ApplicationName=APP" + id + "," + rootDN, mod);
 		return result;
 
 	}
@@ -161,10 +179,12 @@ public class ModifyEntry {
 	 */
 	public static boolean checkModifiedEntry(LDAPConnection ldapConnection, int id) throws LDAPException {
 		
+		String rootDN = LdapFunctionTest.getDN();
+		
 		/*
 		 * Check first level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + ",o=ericsson,dc=com";
+		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
 		SearchScope scope = SearchScope.BASE;
 		Filter filter = Filter.create("(objectClass=*)");
 		String[] attributes = null;
@@ -197,10 +217,12 @@ public class ModifyEntry {
 	 */
 	public static boolean checkModifiedAlias(LDAPConnection ldapConnection, int id) throws LDAPException {
 		
+		String rootDN = LdapFunctionTest.getDN();
+		
 		/*
 		 * Check first level entry.
 		 */
-		String baseDN = "APP=" + id + ",o=ericsson,dc=com";
+		String baseDN = "APP=" + id + "," + rootDN;
 		SearchScope scope = SearchScope.BASE;
 		Filter filter = Filter.create("(objectClass=*)");
 		String[] attributes = null;
@@ -235,7 +257,7 @@ public class ModifyEntry {
 				new Modification(ModificationType.REPLACE, "cn", "value3"),
 		};
 		
-		LDAPResult result = ldapConnection.modify("UserContainerName=MODxx,ApplicationName=APPyy,o=ericsson,dc=com", mod);
+		LDAPResult result = ldapConnection.modify("UserContainerName=MODxx,ApplicationName=APPyy,o=company,dc=com", mod);
 		return result;
 
 	}

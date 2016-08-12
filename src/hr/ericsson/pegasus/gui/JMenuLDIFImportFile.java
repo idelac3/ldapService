@@ -7,7 +7,7 @@ import javax.swing.JMenuItem;
  * <HR>
  * Please refer to {@link ActionListenerLDIFImportFile}.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 

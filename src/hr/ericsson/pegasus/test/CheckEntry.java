@@ -19,10 +19,12 @@ public class CheckEntry {
 	 */
 	public static boolean checkAliasEntry(LDAPConnection ldapConnection, int id) throws LDAPException {
 		
+		String rootDN = LdapFunctionTest.getDN();
+		
 		/*
 		 * Check first level entry.
 		 */
-		String baseDN = "APP=" + id + ",o=ericsson,dc=com";
+		String baseDN = "APP=" + id + "," + rootDN;
 		SearchScope scope = SearchScope.BASE;
 		Filter filter = Filter.create("(objectClass=*)");
 		String[] attributes = null;
@@ -52,11 +54,13 @@ public class CheckEntry {
 	 *  scope BASE, default filter and empty attribute list.
 	 */
 	public static boolean checkEntry(LDAPConnection ldapConnection, int id) throws LDAPException {
+
+		String rootDN = LdapFunctionTest.getDN();
 		
 		/*
 		 * Check first level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + ",o=ericsson,dc=com";
+		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
 		SearchScope scope = SearchScope.BASE;
 		Filter filter = Filter.create("(objectClass=*)");
 		String[] attributes = null;
@@ -86,10 +90,12 @@ public class CheckEntry {
 	 */
 	public static boolean checkEntryAttributeSet(LDAPConnection ldapConnection, int id) throws LDAPException {
 		
+		String rootDN = LdapFunctionTest.getDN();
+		
 		/*
 		 * Check first level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + ",o=ericsson,dc=com";
+		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
 		SearchScope scope = SearchScope.BASE;
 		Filter filter = Filter.create("(objectClass=*)");
 		String[] attributes = { "ApplicationName" };
@@ -120,10 +126,12 @@ public class CheckEntry {
 	 */
 	public static boolean checkEntryFilterSet(LDAPConnection ldapConnection, int id) throws LDAPException {
 		
+		String rootDN = LdapFunctionTest.getDN();
+		
 		/*
 		 * Check first level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + ",o=ericsson,dc=com";
+		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
 		SearchScope scope = SearchScope.BASE;
 		Filter filter = Filter.create("(ApplicationName=APP" + id + ")");
 		String[] attributes = {};
@@ -155,10 +163,12 @@ public class CheckEntry {
 	 */
 	public static boolean checkEntryFilterSetAttributeSet(LDAPConnection ldapConnection, int id) throws LDAPException {
 		
+		String rootDN = LdapFunctionTest.getDN();
+		
 		/*
 		 * Check first level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + ",o=ericsson,dc=com";
+		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
 		SearchScope scope = SearchScope.BASE;
 		Filter filter = Filter.create("(ApplicationName=APP" + id + ")");
 		String[] attributes = { "ApplicationName" };
@@ -188,11 +198,13 @@ public class CheckEntry {
 	 *  scope ONE, default filter and empty attribute list.
 	 */
 	public static boolean checkSubEntry(LDAPConnection ldapConnection, int id, int subId) throws LDAPException {
+	
+		String rootDN = LdapFunctionTest.getDN();
 		
 		/*
 		 * Check second level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + ",o=ericsson,dc=com";
+		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
 		SearchScope scope = SearchScope.ONE;
 		Filter filter = Filter.create("(objectClass=*)");
 		String[] attributes = null;
@@ -223,10 +235,12 @@ public class CheckEntry {
 	 */
 	public static boolean checkSubEntryAttributeSet(LDAPConnection ldapConnection, int id, int subId) throws LDAPException {
 		
+		String rootDN = LdapFunctionTest.getDN();
+		
 		/*
 		 * Check second level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + ",o=ericsson,dc=com";
+		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
 		SearchScope scope = SearchScope.ONE;
 		Filter filter = Filter.create("(objectClass=*)");
 		String[] attributes = { "UserContainerName" };
@@ -256,10 +270,12 @@ public class CheckEntry {
 	 */
 	public static boolean checkSubEntryFilterSet(LDAPConnection ldapConnection, int id, int subId) throws LDAPException {
 		
+		String rootDN = LdapFunctionTest.getDN();
+		
 		/*
 		 * Check second level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + ",o=ericsson,dc=com";
+		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
 		SearchScope scope = SearchScope.ONE;
 		Filter filter = Filter.create("(UserContainerName=MOD" + subId + ")");
 		String[] attributes = { };
@@ -291,10 +307,12 @@ public class CheckEntry {
 	 */
 	public static boolean checkSubEntryFilterSetAttributeSet(LDAPConnection ldapConnection, int id, int subId) throws LDAPException {
 		
+		String rootDN = LdapFunctionTest.getDN();
+		
 		/*
 		 * Check second level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + ",o=ericsson,dc=com";
+		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
 		SearchScope scope = SearchScope.ONE;
 		Filter filter = Filter.create("(UserContainerName=MOD" + subId + ")");
 		String[] attributes = { "UserContainerName" };
@@ -325,10 +343,12 @@ public class CheckEntry {
 	 */
 	public static boolean checkEntryAndSubEntry(LDAPConnection ldapConnection, int id, int subId) throws LDAPException {
 		
+		String rootDN = LdapFunctionTest.getDN();
+		
 		/*
 		 * Check second level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + ",o=ericsson,dc=com";
+		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
 		SearchScope scope = SearchScope.SUB;
 		Filter filter = Filter.create("(objectClass=*)");
 		String[] attributes = null;
@@ -360,10 +380,12 @@ public class CheckEntry {
 	 */
 	public static boolean checkEntryAndSubEntryAttributeSet(LDAPConnection ldapConnection, int id, int subId) throws LDAPException {
 		
+		String rootDN = LdapFunctionTest.getDN();
+		
 		/*
 		 * Check second level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + ",o=ericsson,dc=com";
+		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
 		SearchScope scope = SearchScope.SUB;
 		Filter filter = Filter.create("(objectClass=*)");
 		String[] attributes = { "ApplicationName", "UserContainerName" };
@@ -395,10 +417,12 @@ public class CheckEntry {
 	 */
 	public static boolean checkEntryAndSubEntryFilterSet(LDAPConnection ldapConnection, int id, int subId) throws LDAPException {
 		
+		String rootDN = LdapFunctionTest.getDN();
+		
 		/*
 		 * Check second level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + ",o=ericsson,dc=com";
+		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
 		SearchScope scope = SearchScope.SUB;
 		Filter filter = Filter.create("(|(ApplicationName=APP" + id + ")(UserContainerName=MOD" + subId + "))");
 		String[] attributes = { };
@@ -429,10 +453,12 @@ public class CheckEntry {
 	 */
 	public static boolean checkEntryAndSubEntryFilterSetAttributeSet(LDAPConnection ldapConnection, int id, int subId) throws LDAPException {
 		
+		String rootDN = LdapFunctionTest.getDN();
+		
 		/*
 		 * Check second level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + ",o=ericsson,dc=com";
+		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
 		SearchScope scope = SearchScope.SUB;
 		Filter filter = Filter.create("(|(ApplicationName=APP" + id + ")(UserContainerName=MOD" + subId + "))");
 		String[] attributes = { "ApplicationName", "UserContainerName" };

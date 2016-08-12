@@ -9,7 +9,7 @@ import javax.swing.JCheckBoxMenuItem;
  * <HR>
  * Please refer to {@link ActionListenerFileMulticastSync}.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class JMenuFileMulticastSync extends JCheckBoxMenuItem {

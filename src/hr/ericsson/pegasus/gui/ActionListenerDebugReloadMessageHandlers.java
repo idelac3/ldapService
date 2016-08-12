@@ -14,7 +14,7 @@ import java.awt.event.ActionListener;
  * <B>NOTE:</B> There will be a channel (with handlers) only if at least one client
  * is connected, otherwise this has no effect.
  * <HR>
- * @author eigorde
+ * @author igor.delac@gmail.com
  *
  */
 public class ActionListenerDebugReloadMessageHandlers implements ActionListener {
