@@ -17,6 +17,9 @@ import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.ResultCode;
 import com.unboundid.ldap.sdk.SearchResultEntry;
 import com.unboundid.ldap.sdk.SearchScope;
+import com.unboundid.ldap.sdk.schema.AttributeTypeDefinition;
+import com.unboundid.ldap.sdk.schema.MatchingRuleDefinition;
+import com.unboundid.ldap.sdk.schema.ObjectClassDefinition;
 import com.unboundid.util.StaticUtils;
 
 import hr.ericsson.pegasus.Pegasus;
@@ -645,28 +648,40 @@ public class LdapSearchHandler {
 
 					} else if (attribute.equalsIgnoreCase("objectClasses")) {
 
-						if (Pegasus.schemaReader != null) {
-							for (String objectClass : Pegasus.schemaReader.getObjectClasses()) {
+						if (Pegasus.schema != null) {
+							for (ObjectClassDefinition objectClass : Pegasus.schema.getObjectClasses()) {
 
-								String name = objectClass.split(": ")[0];
-								String value = objectClass.split(": ")[1];
+								String name = attribute;
+								String value = objectClass.getNameOrOID();
 								subschemaEntry.addAttribute(name, value);
 							}
 						}
 
 					} else if (attribute.equalsIgnoreCase("attributeTypes")) {
 
-						if (Pegasus.schemaReader != null) {
-							for (String attributeType : Pegasus.schemaReader.getAttributeTypes()) {
+						if (Pegasus.schema != null) {
+							for (AttributeTypeDefinition attributeType : Pegasus.schema.getAttributeTypes()) {
 
-								String name = attributeType.split(": ")[0];
-								String value = attributeType.split(": ")[1];
+								String name = attribute;
+								String value = attributeType.getNameOrOID();
 								subschemaEntry.addAttribute(name, value);
 							}
 						}
+					} else if (attribute.equalsIgnoreCase("matchingRules")) {
+
+						if (Pegasus.schema != null) {
+							for (MatchingRuleDefinition matchingRule : Pegasus.schema.getMatchingRules()) {
+
+								String name = attribute;
+								String value = matchingRule.getNameOrOID();
+								subschemaEntry.addAttribute(name, value);
+							}
+						}
+					} else if (attribute.equalsIgnoreCase("*")) {
+						// Ups, what to do here ??
 					} else {
-						// Pegasus.log("DEBUG: Unsupported request for schema attribute:"
-						//		+ attribute);
+						Pegasus.debug("INFO: Unsupported request for schema attribute:"
+								+ attribute);
 					}
 
 
