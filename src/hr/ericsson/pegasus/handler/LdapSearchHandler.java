@@ -17,6 +17,7 @@ import com.unboundid.ldap.sdk.LDAPException;
 import com.unboundid.ldap.sdk.ResultCode;
 import com.unboundid.ldap.sdk.SearchResultEntry;
 import com.unboundid.ldap.sdk.SearchScope;
+import com.unboundid.ldap.sdk.schema.AttributeSyntaxDefinition;
 import com.unboundid.ldap.sdk.schema.AttributeTypeDefinition;
 import com.unboundid.ldap.sdk.schema.MatchingRuleDefinition;
 import com.unboundid.ldap.sdk.schema.ObjectClassDefinition;
@@ -652,7 +653,7 @@ public class LdapSearchHandler {
 							for (ObjectClassDefinition objectClass : Pegasus.schema.getObjectClasses()) {
 
 								String name = attribute;
-								String value = objectClass.getNameOrOID();
+								String value = objectClass.toString();
 								subschemaEntry.addAttribute(name, value);
 							}
 						}
@@ -663,7 +664,7 @@ public class LdapSearchHandler {
 							for (AttributeTypeDefinition attributeType : Pegasus.schema.getAttributeTypes()) {
 
 								String name = attribute;
-								String value = attributeType.getNameOrOID();
+								String value = attributeType.toString();
 								subschemaEntry.addAttribute(name, value);
 							}
 						}
@@ -673,10 +674,20 @@ public class LdapSearchHandler {
 							for (MatchingRuleDefinition matchingRule : Pegasus.schema.getMatchingRules()) {
 
 								String name = attribute;
-								String value = matchingRule.getNameOrOID();
+								String value = matchingRule.toString();
 								subschemaEntry.addAttribute(name, value);
 							}
 						}
+					} else if (attribute.equalsIgnoreCase("ldapSyntaxes")) {
+
+						if (Pegasus.schema != null) {
+							for (AttributeSyntaxDefinition attributeSyntax : Pegasus.schema.getAttributeSyntaxes()) {
+
+								String name = attribute;
+								String value = attributeSyntax.toString();
+								subschemaEntry.addAttribute(name, value);
+							}
+						}	
 					} else if (attribute.equalsIgnoreCase("*")) {
 						// Ups, what to do here ??
 					} else {

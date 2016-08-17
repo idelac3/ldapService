@@ -14,7 +14,7 @@ public class DeleteEntry {
 		
 		String rootDN = LdapFunctionTest.getDN();
 		
-		LDAPResult result = ldapConnection.delete("ApplicationName=APP" + id + "," + rootDN);
+		LDAPResult result = ldapConnection.delete("cn=room" + id + "," + rootDN);
 		return result;
 
 	}
@@ -27,7 +27,7 @@ public class DeleteEntry {
 		
 		String rootDN = LdapFunctionTest.getDN();
 		
-		LDAPResult result = ldapConnection.delete("ApplicationName=APPxxx," + rootDN);
+		LDAPResult result = ldapConnection.delete("cn=roomXXX," + rootDN);
 		return result;
 
 	}

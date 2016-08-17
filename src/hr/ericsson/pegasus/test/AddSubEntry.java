@@ -16,10 +16,10 @@ public class AddSubEntry {
 		
 		String rootDN = LdapFunctionTest.getDN();
 		
-		Attribute objectClass = new Attribute("objectClass", "top", "UserContainer");
-		Attribute applicationName = new Attribute("UserContainerName", "MOD" + subId);
+		Attribute objectClass = new Attribute("objectClass", "top", "room");
+		Attribute applicationName = new Attribute("cn", "MOD" + subId);
 		
-		Entry entry = new Entry("UserContainerName=MOD" + subId + ",ApplicationName=APP" + id + "," + rootDN, objectClass, applicationName);
+		Entry entry = new Entry("cn=MOD" + subId + ",cn=room" + id + "," + rootDN, objectClass, applicationName);
 	
 		LDAPResult result = ldapConnection.add(entry);
 		return result;

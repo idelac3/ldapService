@@ -14,7 +14,7 @@ public class DeleteSubEntry {
 		
 		String rootDN = LdapFunctionTest.getDN();
 		
-		LDAPResult result = ldapConnection.delete("UserContainerName=MOD" + subId + ",ApplicationName=APP" + id + "," + rootDN);
+		LDAPResult result = ldapConnection.delete("cn=MOD" + subId + ",cn=room" + id + "," + rootDN);
 		return result;
 
 	}

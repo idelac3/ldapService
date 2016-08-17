@@ -24,7 +24,7 @@ public class CheckEntry {
 		/*
 		 * Check first level entry.
 		 */
-		String baseDN = "APP=" + id + "," + rootDN;
+		String baseDN = "roomNumber=" + id + "," + rootDN;
 		SearchScope scope = SearchScope.BASE;
 		Filter filter = Filter.create("(objectClass=*)");
 		String[] attributes = null;
@@ -38,7 +38,7 @@ public class CheckEntry {
 		
 		for ( SearchResultEntry resultEntry : searchResult.getSearchEntries())
 		{
-			if (resultEntry.hasAttributeValue("ApplicationName", "APP" + id) )
+			if (resultEntry.hasAttributeValue("cn", "room" + id) )
 			{
 				count++;
 			}
@@ -60,7 +60,7 @@ public class CheckEntry {
 		/*
 		 * Check first level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
+		String baseDN = "cn=room" + id + "," + rootDN;
 		SearchScope scope = SearchScope.BASE;
 		Filter filter = Filter.create("(objectClass=*)");
 		String[] attributes = null;
@@ -73,7 +73,7 @@ public class CheckEntry {
 		
 		for ( SearchResultEntry resultEntry : searchResult.getSearchEntries())
 		{
-			if (resultEntry.hasAttributeValue("ApplicationName", "APP" + id) )
+			if (resultEntry.hasAttributeValue("cn", "room" + id) )
 			{
 				count++;
 			}
@@ -95,10 +95,10 @@ public class CheckEntry {
 		/*
 		 * Check first level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
+		String baseDN = "cn=room" + id + "," + rootDN;
 		SearchScope scope = SearchScope.BASE;
 		Filter filter = Filter.create("(objectClass=*)");
-		String[] attributes = { "ApplicationName" };
+		String[] attributes = { "cn" };
 		
 		SearchRequest arg0 = new SearchRequest(baseDN, scope, filter, attributes);
 		
@@ -108,7 +108,7 @@ public class CheckEntry {
 		
 		for ( SearchResultEntry resultEntry : searchResult.getSearchEntries())
 		{
-			if (resultEntry.hasAttributeValue("ApplicationName", "APP" + id) )
+			if (resultEntry.hasAttributeValue("cn", "room" + id) )
 			{
 				count++;
 			}
@@ -131,9 +131,9 @@ public class CheckEntry {
 		/*
 		 * Check first level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
+		String baseDN = "cn=room" + id + "," + rootDN;
 		SearchScope scope = SearchScope.BASE;
-		Filter filter = Filter.create("(ApplicationName=APP" + id + ")");
+		Filter filter = Filter.create("(cn=room" + id + ")");
 		String[] attributes = {};
 		
 		SearchRequest arg0 = new SearchRequest(baseDN, scope, filter, attributes);
@@ -144,7 +144,7 @@ public class CheckEntry {
 		
 		for ( SearchResultEntry resultEntry : searchResult.getSearchEntries())
 		{
-			if (resultEntry.hasAttributeValue("ApplicationName", "APP" + id) &&
+			if (resultEntry.hasAttributeValue("cn", "room" + id) &&
 					resultEntry.hasAttribute("objectClass"))
 			{
 				count++;
@@ -168,10 +168,10 @@ public class CheckEntry {
 		/*
 		 * Check first level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
+		String baseDN = "cn=room" + id + "," + rootDN;
 		SearchScope scope = SearchScope.BASE;
-		Filter filter = Filter.create("(ApplicationName=APP" + id + ")");
-		String[] attributes = { "ApplicationName" };
+		Filter filter = Filter.create("(cn=room" + id + ")");
+		String[] attributes = { "cn" };
 		
 		SearchRequest arg0 = new SearchRequest(baseDN, scope, filter, attributes);
 		
@@ -181,7 +181,7 @@ public class CheckEntry {
 		
 		for ( SearchResultEntry resultEntry : searchResult.getSearchEntries())
 		{
-			if (resultEntry.hasAttributeValue("ApplicationName", "APP" + id) &&
+			if (resultEntry.hasAttributeValue("cn", "room" + id) &&
 					!(resultEntry.hasAttribute("objectClass")) )
 			{
 				count++;
@@ -204,7 +204,7 @@ public class CheckEntry {
 		/*
 		 * Check second level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
+		String baseDN = "cn=room" + id + "," + rootDN;
 		SearchScope scope = SearchScope.ONE;
 		Filter filter = Filter.create("(objectClass=*)");
 		String[] attributes = null;
@@ -217,7 +217,7 @@ public class CheckEntry {
 		
 		for ( SearchResultEntry resultEntry : searchResult.getSearchEntries())
 		{
-			if (resultEntry.hasAttributeValue("UserContainerName", "MOD" + subId) )
+			if (resultEntry.hasAttributeValue("cn", "MOD" + subId) )
 			{
 				count++;
 			}
@@ -240,10 +240,10 @@ public class CheckEntry {
 		/*
 		 * Check second level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
+		String baseDN = "cn=room" + id + "," + rootDN;
 		SearchScope scope = SearchScope.ONE;
 		Filter filter = Filter.create("(objectClass=*)");
-		String[] attributes = { "UserContainerName" };
+		String[] attributes = { "cn" };
 		
 		SearchRequest arg0 = new SearchRequest(baseDN, scope, filter, attributes);
 		
@@ -253,7 +253,7 @@ public class CheckEntry {
 		
 		for ( SearchResultEntry resultEntry : searchResult.getSearchEntries())
 		{
-			if (resultEntry.hasAttributeValue("UserContainerName", "MOD" + subId) )
+			if (resultEntry.hasAttributeValue("cn", "MOD" + subId) )
 			{
 				count++;
 			}
@@ -275,9 +275,9 @@ public class CheckEntry {
 		/*
 		 * Check second level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
+		String baseDN = "cn=room" + id + "," + rootDN;
 		SearchScope scope = SearchScope.ONE;
-		Filter filter = Filter.create("(UserContainerName=MOD" + subId + ")");
+		Filter filter = Filter.create("(cn=MOD" + subId + ")");
 		String[] attributes = { };
 		
 		SearchRequest arg0 = new SearchRequest(baseDN, scope, filter, attributes);
@@ -288,7 +288,7 @@ public class CheckEntry {
 		
 		for ( SearchResultEntry resultEntry : searchResult.getSearchEntries())
 		{
-			if (resultEntry.hasAttributeValue("UserContainerName", "MOD" + subId) &&
+			if (resultEntry.hasAttributeValue("cn", "MOD" + subId) &&
 					resultEntry.hasAttribute("objectClass"))
 			{
 				count++;
@@ -312,10 +312,10 @@ public class CheckEntry {
 		/*
 		 * Check second level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
+		String baseDN = "cn=room" + id + "," + rootDN;
 		SearchScope scope = SearchScope.ONE;
-		Filter filter = Filter.create("(UserContainerName=MOD" + subId + ")");
-		String[] attributes = { "UserContainerName" };
+		Filter filter = Filter.create("(cn=MOD" + subId + ")");
+		String[] attributes = { "cn" };
 		
 		SearchRequest arg0 = new SearchRequest(baseDN, scope, filter, attributes);
 		
@@ -325,7 +325,7 @@ public class CheckEntry {
 		
 		for ( SearchResultEntry resultEntry : searchResult.getSearchEntries())
 		{
-			if (resultEntry.hasAttributeValue("UserContainerName", "MOD" + subId) &&
+			if (resultEntry.hasAttributeValue("cn", "MOD" + subId) &&
 					!(resultEntry.hasAttribute("objectClass")) )
 			{
 				count++;
@@ -348,7 +348,7 @@ public class CheckEntry {
 		/*
 		 * Check second level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
+		String baseDN = "cn=room" + id + "," + rootDN;
 		SearchScope scope = SearchScope.SUB;
 		Filter filter = Filter.create("(objectClass=*)");
 		String[] attributes = null;
@@ -361,8 +361,8 @@ public class CheckEntry {
 		
 		for ( SearchResultEntry resultEntry : searchResult.getSearchEntries())
 		{
-			if (resultEntry.hasAttributeValue("UserContainerName", "MOD" + subId) ||
-					resultEntry.hasAttributeValue("ApplicationName", "APP" + id) )
+			if (resultEntry.hasAttributeValue("cn", "MOD" + subId) ||
+					resultEntry.hasAttributeValue("cn", "room" + id) )
 			{
 				count++;
 			}
@@ -385,10 +385,10 @@ public class CheckEntry {
 		/*
 		 * Check second level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
+		String baseDN = "cn=room" + id + "," + rootDN;
 		SearchScope scope = SearchScope.SUB;
 		Filter filter = Filter.create("(objectClass=*)");
-		String[] attributes = { "ApplicationName", "UserContainerName" };
+		String[] attributes = { "cn" };
 		
 		SearchRequest arg0 = new SearchRequest(baseDN, scope, filter, attributes);
 		
@@ -398,8 +398,8 @@ public class CheckEntry {
 		
 		for ( SearchResultEntry resultEntry : searchResult.getSearchEntries())
 		{
-			if (resultEntry.hasAttributeValue("UserContainerName", "MOD" + subId) ||
-					resultEntry.hasAttributeValue("ApplicationName", "APP" + id) )
+			if (resultEntry.hasAttributeValue("cn", "MOD" + subId) ||
+					resultEntry.hasAttributeValue("cn", "room" + id) )
 			{
 				count++;
 			}
@@ -422,9 +422,9 @@ public class CheckEntry {
 		/*
 		 * Check second level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
+		String baseDN = "cn=room" + id + "," + rootDN;
 		SearchScope scope = SearchScope.SUB;
-		Filter filter = Filter.create("(|(ApplicationName=APP" + id + ")(UserContainerName=MOD" + subId + "))");
+		Filter filter = Filter.create("(|(cn=room" + id + ")(cn=MOD" + subId + "))");
 		String[] attributes = { };
 		
 		SearchRequest arg0 = new SearchRequest(baseDN, scope, filter, attributes);
@@ -435,8 +435,8 @@ public class CheckEntry {
 		
 		for ( SearchResultEntry resultEntry : searchResult.getSearchEntries())
 		{
-			if (resultEntry.hasAttributeValue("UserContainerName", "MOD" + subId) ||
-					resultEntry.hasAttributeValue("ApplicationName", "APP" + id) )
+			if (resultEntry.hasAttributeValue("cn", "MOD" + subId) ||
+					resultEntry.hasAttributeValue("cn", "room" + id) )
 			{
 				count++;
 			}
@@ -458,10 +458,10 @@ public class CheckEntry {
 		/*
 		 * Check second level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
+		String baseDN = "cn=room" + id + "," + rootDN;
 		SearchScope scope = SearchScope.SUB;
-		Filter filter = Filter.create("(|(ApplicationName=APP" + id + ")(UserContainerName=MOD" + subId + "))");
-		String[] attributes = { "ApplicationName", "UserContainerName" };
+		Filter filter = Filter.create("(|(cn=room" + id + ")(cn=MOD" + subId + "))");
+		String[] attributes = { "cn" };
 		
 		SearchRequest arg0 = new SearchRequest(baseDN, scope, filter, attributes);
 		
@@ -471,8 +471,8 @@ public class CheckEntry {
 		
 		for ( SearchResultEntry resultEntry : searchResult.getSearchEntries())
 		{
-			if (resultEntry.hasAttributeValue("UserContainerName", "MOD" + subId) ||
-					resultEntry.hasAttributeValue("ApplicationName", "APP" + id) &&
+			if (resultEntry.hasAttributeValue("cn", "MOD" + subId) ||
+					resultEntry.hasAttributeValue("cn", "room" + id) &&
 					!(resultEntry.hasAttribute("objectClass")) )
 			{
 				count++;

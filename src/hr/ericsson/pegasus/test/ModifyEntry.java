@@ -21,14 +21,14 @@ public class ModifyEntry {
 	public static LDAPResult modifyAliasAddAttributes(LDAPConnection ldapConnection, int id) throws LDAPException {
 		
 		Modification[] mod = {
-				new Modification(ModificationType.ADD, "cn", "value1"),
-				new Modification(ModificationType.ADD, "cn", "value2"),
-				new Modification(ModificationType.ADD, "NodeIdentity", "value1"),
+				new Modification(ModificationType.ADD, "roomNumber", "1"),
+				new Modification(ModificationType.ADD, "description", "some desc."),
+
 		};
 		
 		String rootDN = LdapFunctionTest.getDN();
 		
-		LDAPResult result = ldapConnection.modify("APP=" + id + "," + rootDN, mod);
+		LDAPResult result = ldapConnection.modify("roomNumber=" + id + "," + rootDN, mod);
 		return result;
 
 	}
@@ -40,12 +40,12 @@ public class ModifyEntry {
 	public static LDAPResult modifyAliasDelAttribute(LDAPConnection ldapConnection, int id) throws LDAPException {
 		
 		Modification[] mod = {
-				new Modification(ModificationType.DELETE, "cn", "value2"),
+				new Modification(ModificationType.DELETE, "roomNumber", "1"),
 		};
 		
 		String rootDN = LdapFunctionTest.getDN();
 		
-		LDAPResult result = ldapConnection.modify("APP=" + id + "," + rootDN, mod);
+		LDAPResult result = ldapConnection.modify("roomNumber=" + id + "," + rootDN, mod);
 		return result;
 
 	}
@@ -57,12 +57,12 @@ public class ModifyEntry {
 	public static LDAPResult modifyAliasReplaceAttributes(LDAPConnection ldapConnection, int id) throws LDAPException {
 		
 		Modification[] mod = {
-				new Modification(ModificationType.REPLACE, "NodeIdentity", "value3"),
+				new Modification(ModificationType.REPLACE, "description", "value3"),
 		};
 		
 		String rootDN = LdapFunctionTest.getDN();
 		
-		LDAPResult result = ldapConnection.modify("APP=" + id + "," + rootDN, mod);
+		LDAPResult result = ldapConnection.modify("roomNumber=" + id + "," + rootDN, mod);
 		return result;
 
 	}
@@ -74,14 +74,13 @@ public class ModifyEntry {
 	public static LDAPResult modifyEntryAddAttributes(LDAPConnection ldapConnection, int id) throws LDAPException {
 		
 		Modification[] mod = {
-				new Modification(ModificationType.ADD, "cn", "value1"),
-				new Modification(ModificationType.ADD, "cn", "value2"),
-				new Modification(ModificationType.ADD, "NodeIdentity", "value1"),
+				new Modification(ModificationType.ADD, "roomNumber", "2"),
+				new Modification(ModificationType.ADD, "description", "some desc."),
 		};
 		
 		String rootDN = LdapFunctionTest.getDN();
 		
-		LDAPResult result = ldapConnection.modify("ApplicationName=APP" + id + "," + rootDN, mod);
+		LDAPResult result = ldapConnection.modify("cn=room" + id + "," + rootDN, mod);
 		return result;
 
 	}
@@ -93,13 +92,13 @@ public class ModifyEntry {
 	public static LDAPResult modifySubentryAddAttributes(LDAPConnection ldapConnection, int id, int subId) throws LDAPException {
 		
 		Modification[] mod = {
-				new Modification(ModificationType.ADD, "cn", "value1"),
-				new Modification(ModificationType.ADD, "cn", "value2"),
+				new Modification(ModificationType.ADD, "description", "value1"),
+				new Modification(ModificationType.ADD, "description", "value2"),
 		};
 		
 		String rootDN = LdapFunctionTest.getDN();
 		
-		LDAPResult result = ldapConnection.modify("UserContainerName=MOD" + subId + ",ApplicationName=APP" + id + "," + rootDN, mod);
+		LDAPResult result = ldapConnection.modify("cn=MOD" + subId + ",cn=room" + id + "," + rootDN, mod);
 		return result;
 
 	}
@@ -111,12 +110,12 @@ public class ModifyEntry {
 	public static LDAPResult modifyEntryDelAttribute(LDAPConnection ldapConnection, int id) throws LDAPException {
 		
 		Modification[] mod = {
-				new Modification(ModificationType.DELETE, "cn", "value2"),
+				new Modification(ModificationType.DELETE, "roomNumber", "2"),
 		};
 		
 		String rootDN = LdapFunctionTest.getDN();
 		
-		LDAPResult result = ldapConnection.modify("ApplicationName=APP" + id + "," + rootDN, mod);
+		LDAPResult result = ldapConnection.modify("cn=room" + id + "," + rootDN, mod);
 		return result;
 
 	}
@@ -128,12 +127,12 @@ public class ModifyEntry {
 	public static LDAPResult modifySubentryDelAttribute(LDAPConnection ldapConnection, int id, int subId) throws LDAPException {
 		
 		Modification[] mod = {
-				new Modification(ModificationType.DELETE, "cn", "value2"),
+				new Modification(ModificationType.DELETE, "description", "value2"),
 		};
 		
 		String rootDN = LdapFunctionTest.getDN();
 		
-		LDAPResult result = ldapConnection.modify("UserContainerName=MOD" + subId + ",ApplicationName=APP" + id + "," + rootDN, mod);
+		LDAPResult result = ldapConnection.modify("cn=MOD" + subId + ",cn=room" + id + "," + rootDN, mod);
 		return result;
 
 	}
@@ -145,12 +144,12 @@ public class ModifyEntry {
 	public static LDAPResult modifyEntryReplaceAttributes(LDAPConnection ldapConnection, int id) throws LDAPException {
 		
 		Modification[] mod = {
-				new Modification(ModificationType.REPLACE, "NodeIdentity", "value3"),
+				new Modification(ModificationType.REPLACE, "description", "value3"),
 		};
 		
 		String rootDN = LdapFunctionTest.getDN();
 		
-		LDAPResult result = ldapConnection.modify("ApplicationName=APP" + id + "," + rootDN, mod);
+		LDAPResult result = ldapConnection.modify("cn=room" + id + "," + rootDN, mod);
 		return result;
 
 	}
@@ -162,12 +161,12 @@ public class ModifyEntry {
 	public static LDAPResult modifySubentryReplaceAttributes(LDAPConnection ldapConnection, int id, int subId) throws LDAPException {
 		
 		Modification[] mod = {
-				new Modification(ModificationType.REPLACE, "cn", "value3"),
+				new Modification(ModificationType.REPLACE, "description", "value3"),
 		};
 		
 		String rootDN = LdapFunctionTest.getDN();
 		
-		LDAPResult result = ldapConnection.modify("UserContainerName=MOD" + subId + ",ApplicationName=APP" + id + "," + rootDN, mod);
+		LDAPResult result = ldapConnection.modify("cn=MOD" + subId + ",cn=room" + id + "," + rootDN, mod);
 		return result;
 
 	}
@@ -184,7 +183,7 @@ public class ModifyEntry {
 		/*
 		 * Check first level entry.
 		 */
-		String baseDN = "ApplicationName=APP" + id + "," + rootDN;
+		String baseDN = "cn=room" + id + "," + rootDN;
 		SearchScope scope = SearchScope.BASE;
 		Filter filter = Filter.create("(objectClass=*)");
 		String[] attributes = null;
@@ -197,8 +196,7 @@ public class ModifyEntry {
 		
 		for ( SearchResultEntry resultEntry : searchResult.getSearchEntries())
 		{
-			if (resultEntry.hasAttributeValue("cn", "value1") &&
-					resultEntry.hasAttributeValue("NodeIdentity","value3"))
+			if (resultEntry.hasAttributeValue("description", "value3"))
 			{
 				count++;
 			}
@@ -222,7 +220,7 @@ public class ModifyEntry {
 		/*
 		 * Check first level entry.
 		 */
-		String baseDN = "APP=" + id + "," + rootDN;
+		String baseDN = "roomNumber=" + id + "," + rootDN;
 		SearchScope scope = SearchScope.BASE;
 		Filter filter = Filter.create("(objectClass=*)");
 		String[] attributes = null;
@@ -236,8 +234,8 @@ public class ModifyEntry {
 		
 		for ( SearchResultEntry resultEntry : searchResult.getSearchEntries())
 		{
-			if (resultEntry.hasAttributeValue("cn", "value1") &&
-					resultEntry.hasAttributeValue("NodeIdentity","value3"))
+			if (resultEntry.hasAttribute("cn") &&
+					resultEntry.hasAttributeValue("description","value3"))
 			{
 				count++;
 			}
@@ -254,10 +252,10 @@ public class ModifyEntry {
 	public static LDAPResult modifyInvalidEntry(LDAPConnection ldapConnection) throws LDAPException {
 		
 		Modification[] mod = {
-				new Modification(ModificationType.REPLACE, "cn", "value3"),
+				new Modification(ModificationType.REPLACE, "description", "value3"),
 		};
 		
-		LDAPResult result = ldapConnection.modify("UserContainerName=MODxx,ApplicationName=APPyy,o=company,dc=com", mod);
+		LDAPResult result = ldapConnection.modify("cn=MODxx,cn=roomXXX,o=company,dc=com", mod);
 		return result;
 
 	}

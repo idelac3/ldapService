@@ -95,12 +95,7 @@ public class Pegasus {
 	 * Reference to Backend instance.
 	 */
 	public static ConcurrentBackend myBackend;
-	
-	/**
-	 * Reference to Schema Reader object.
-	 */
-	public static SchemaReader schemaReader;
-	
+
 	/**
 	 * Schema instance for validation of LDAP operations.
 	 */
@@ -343,20 +338,13 @@ public class Pegasus {
         }
         
 		if (schemaFiles.length() > 0) {
-			schemaReader = new SchemaReader();
+
 			for (String schemaFile : schemaFiles.split(",")) {
+				
 				File schema = new File(schemaFile);
+				
 				if (schema.exists()) {
 					if (schema.isFile()) {
-						
-						/*
-						 * Load schema file into SchemaReader first.
-						 */
-						try {
-							schemaReader.loadSchemaFile(schema);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
 			
 						/*
 						 * Then load into Schema instance.
@@ -375,19 +363,14 @@ public class Pegasus {
 					}
 					else if (schema.isDirectory()) {
 						/*
-						 * Support for folder with *.schema files.
+						 * Support for folder with *.schema (OpenLDAP format) and *.ldif (RFC format) schema files.
 						 */
 						for (String dirItem : schema.list()) {
 							if (dirItem.endsWith(".schema") || dirItem.endsWith(".ldif")) {
+								
 								File schemaItem = new File(schema.getName() + "/" + dirItem);
 								if (schemaItem.isFile()) {
-						
-									try {
-										schemaReader.loadSchemaFile(schemaItem);
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
-									
+
 									try {
 										if (Pegasus.schema == null) {
 											Pegasus.schema = Schema.getSchema(schema);
@@ -412,15 +395,12 @@ public class Pegasus {
 				}
 			}
 		}
-		else {
-			schemaReader = null;
-		}
 		
 		/*
-		 * Write schema into single file according to RFC 4512.
+		 * Convert OpenLDAP schema into LDIF file according to RFC 4512.
 		 * Ref. http://www.zytrax.com/books/ldap/ch3/
 		 */
-		if (schemaReader != null && invalidSchemaFileList.size() > 0) {
+		if (invalidSchemaFileList.size() > 0) {
 			
 			/*
 			 * Looks like some schema files are not in LDIF format,

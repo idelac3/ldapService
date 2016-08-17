@@ -1,5 +1,6 @@
 package hr.ericsson.pegasus.handler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.unboundid.ldap.protocol.AddRequestProtocolOp;
@@ -7,6 +8,7 @@ import com.unboundid.ldap.protocol.AddResponseProtocolOp;
 import com.unboundid.ldap.protocol.LDAPMessage;
 import com.unboundid.ldap.sdk.Entry;
 import com.unboundid.ldap.sdk.ResultCode;
+import com.unboundid.ldap.sdk.schema.EntryValidator;
 import com.unboundid.util.StaticUtils;
 
 import hr.ericsson.pegasus.Pegasus;
@@ -16,7 +18,7 @@ import hr.ericsson.pegasus.backend.CustomStr;
 /**
  * <H1>Ldap Add Handler</H1>
  * <HR>
- * This handler is used for LDAP bind requests.
+ * This handler is used for LDAP ADD requests.
  * <HR>
  * @author igor.delac@gmail.com
  *
@@ -71,6 +73,9 @@ public class LdapAddHandler {
 	                "Invalid DN value.", null), StaticUtils.NO_CONTROLS);
 		}
 		
+		/*
+		 * Case when entry already exists.
+		 */
 		if (Pegasus.myBackend.getEntry(dn) != null) {
 			
 			Pegasus.failedAdd++;
@@ -81,6 +86,42 @@ public class LdapAddHandler {
 		}
 
 		Entry entry = new Entry(request.getDN(), request.getAttributes());
+		
+
+		/*
+		 * Check entry against schema. Only if schema object instance is present.
+		 */
+		if (Pegasus.schema != null) {
+			
+			/*
+			 * Entry Validator which uses schema definition(s).
+			 */
+			EntryValidator validator = new EntryValidator(Pegasus.schema);
+			validator.setCheckProhibitedObjectClasses(false);
+			
+			/*
+			 * List of reasons why entry is invalid.
+			 */
+			List<java.lang.String> invalidReasons = new ArrayList<String>();
+			
+			if (validator.entryIsValid(entry, invalidReasons)) {
+				// Ok, entry pass schema validation.
+			}
+			else {
+				// Entry did not pass schema validation.
+				Pegasus.debug("Add of '" + entry.getDN() + "' did not pass schema validation.");				
+				Pegasus.debug("Invalid entry reasons:");
+				for (String reason : invalidReasons) {
+					Pegasus.debug(reason);
+				}
+				
+				Pegasus.failedAdd++;
+				
+		        return new LDAPMessage(messageID, new AddResponseProtocolOp(
+		                ResultCode.OBJECT_CLASS_VIOLATION_INT_VALUE, request.getDN(),
+		                invalidReasons.get(0), null), StaticUtils.NO_CONTROLS);
+			}
+		}
 		
 		if (Pegasus.myBackend.addEntry(dn, entry)) {
 

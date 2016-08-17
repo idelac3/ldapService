@@ -1,0 +1,77 @@
+dn: cn=schema
+objectClass: top
+objectClass: ldapSubEntry
+objectClass: subschema
+cn: schema
+attributeTypes: ( 2.25.6.1.4.1.4203.1.3.0
+  NAME 'id'
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{32} )
+attributeTypes: ( 2.25.6.1.4.1.4203.1.3.1
+  NAME 'date'
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{32} )
+attributeTypes: ( 2.25.6.1.4.1.4203.1.3.2
+  NAME 'email'
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{128} )
+attributeTypes: ( 2.25.6.1.4.1.4203.1.3.3
+  NAME 'password'
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{128} )
+attributeTypes: ( 2.25.6.1.4.1.4203.1.3.4
+  NAME 'hashedToken'
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{128} )
+attributeTypes: ( 2.25.6.1.4.1.4203.1.3.5
+  NAME 'grades'
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{32} )
+attributeTypes: ( 2.25.6.1.4.1.4203.1.3.6
+  NAME 'subjects'
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{128} )
+attributeTypes: ( 2.25.6.1.4.1.4203.1.3.7
+  NAME 'jobTitle'
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{128} )
+attributeTypes: ( 2.25.6.1.4.1.4203.1.3.8
+  NAME 'phone'
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{128} )
+attributeTypes: ( 2.25.6.1.4.1.4203.1.3.9
+  NAME 'school_id'
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{32} )
+attributeTypes: ( 2.25.6.1.4.1.4203.1.3.10
+  NAME 'district_id'
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{32} )
+attributeTypes: ( 2.25.6.1.4.1.4203.1.3.11
+  NAME 'avatarSmall'
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{1024} )
+attributeTypes: ( 2.25.6.1.4.1.4203.1.3.12
+  NAME 'avatarMedium'
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{1024} )
+attributeTypes: ( 2.25.6.1.4.1.4203.1.3.13
+  NAME 'avatarLarge'
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{1024} )
+attributeTypes: ( 2.25.6.1.4.1.4203.1.3.14
+  NAME 'fname'
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{128} )
+attributeTypes: ( 2.25.6.1.4.1.4203.1.3.15
+  NAME 'lname'
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{128} )
+attributeTypes: ( 2.25.6.1.4.1.4203.1.3.16
+  NAME 'roles'
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{128} )
+attributeTypes: ( 2.25.6.1.4.1.4203.1.3.17
+  NAME 'status'
+  SYNTAX 1.3.6.1.4.1.1466.115.121.1.15{128} )
+objectClasses: ( 2.25.6.1.4.1.4203.1.3.255
+  NAME 'teem'
+  MUST ( fname $ lname $ id )
+  MAY ( date $
+        email $
+        password $
+        hashedToken $
+        grades $
+        subjects $
+        jobTitle $
+        phone $
+        school_id $
+        district_id $
+        avatarSmall $
+        avatarMedium $
+        avatarLarge $
+        roles $
+        status ) )

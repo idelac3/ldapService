@@ -14,7 +14,7 @@ public class DeleteAliasEntry {
 		
 		String rootDN = LdapFunctionTest.getDN();
 		
-		LDAPResult result = ldapConnection.delete("APP=" + id + "," + rootDN);
+		LDAPResult result = ldapConnection.delete("roomNumber=" + id + "," + rootDN);
 		return result;
 
 	}

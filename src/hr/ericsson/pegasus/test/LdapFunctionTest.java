@@ -74,9 +74,9 @@ public class LdapFunctionTest {
 			ldapConnection.bind(bindDN, password);
 
 			/*
-			 * Set 15 sec. timeout for every LDAP operation.
+			 * Set 35 sec. timeout for every LDAP operation.
 			 */
-			ldapConnection.getConnectionOptions().setResponseTimeoutMillis(15000);
+			ldapConnection.getConnectionOptions().setResponseTimeoutMillis(35000);
 			
 			/*
 			 * Test Case list.
@@ -90,6 +90,7 @@ public class LdapFunctionTest {
 					new TestCase06(),
 					new TestCase07(),
 					new TestCase08(),
+					new TestCase09(),
 					
 					new TestCase11(),
 					new TestCase12(),

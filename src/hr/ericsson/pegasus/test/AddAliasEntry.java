@@ -16,10 +16,10 @@ public class AddAliasEntry {
 		
 		String rootDN = LdapFunctionTest.getDN();
 		
-		Attribute objectClass = new Attribute("objectClass", "alias", "extensibleObject");
-		Attribute applicationName = new Attribute("aliasedObjectName", "ApplicationName=APP" + id + "," + rootDN);
-		
-		Entry entry = new Entry("APP=" + id + "," + rootDN, objectClass, applicationName);
+		Attribute objectClass = new Attribute("objectClass", "top", "alias", "extensibleObject");
+		Attribute applicationName = new Attribute("aliasedObjectName", "cn=room" + id + "," + rootDN);
+
+		Entry entry = new Entry("roomNumber=" + id + "," + rootDN, objectClass, applicationName);
 		
 		LDAPResult result = ldapConnection.add(entry);
 		return result;

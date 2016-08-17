@@ -199,6 +199,7 @@ public class LdapModifyHandler {
 					 * Entry Validator which uses schema definition(s).
 					 */
 					EntryValidator validator = new EntryValidator(Pegasus.schema);
+					validator.setCheckProhibitedObjectClasses(false);
 					
 					/*
 					 * List of reasons why entry is invalid.
@@ -210,10 +211,10 @@ public class LdapModifyHandler {
 					}
 					else {
 						// Entry did not pass schema validation.
-						Pegasus.debug("Modification of " + modifiedEntry.getDN() + " did not pass schema validation.");
+						Pegasus.debug("Modification of '" + modifiedEntry.getDN() + "' did not pass schema validation.");
 						for (Modification modification : modifications) {
 							
-							if (modification.getValues().length < 2) {
+							if (modification.getValues().length == 1) {
 								Pegasus.debug(modification.getAttributeName() + ": " + modification.getValues()[0]);
 							}
 							else {
