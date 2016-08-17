@@ -68,6 +68,8 @@ where [options] are:
   --disableLdapFilter                if set, filter in LDAP SEARCH request will be ignored.
 </PRE>
 
+To see currently valid options, use --help command line argument.
+
 To start an LDAP service on port TCP 1389, without SSL/TLS and any special features, use:
 
 <PRE>
@@ -222,6 +224,15 @@ Ref.
   * https://en.wikipedia.org/wiki/Public_key_infrastructure
   * https://openvpn.net/index.php/open-source/documentation/miscellaneous/77-rsa-key-management.html
   
+## Schema support
+
+Two types of schema formats are supported: OpenLDAP schema format and RFC (LDIF) schema format.
+OpenLDAP schema format will be internally converted to LDIF schema format. To use standard schema set which is
+provided by UnboundID library, use **--std-schema** command line argument.
+
+It is possible to provide a path to folder with schema files, and all valid schema files inside folder will be loaded.
+
+To disable schema validation for LDAP ADD and MODIFY operations, do not provide schema files. 
   
 Author:
 igor.delac@gmail.com
