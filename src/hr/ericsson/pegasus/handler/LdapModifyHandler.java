@@ -232,7 +232,7 @@ public class LdapModifyHandler {
 						
 				        return new LDAPMessage(messageID, new ModifyResponseProtocolOp(
 				                ResultCode.NAMING_VIOLATION_INT_VALUE, dn.toString(),
-				                "Schema violation", null), StaticUtils.NO_CONTROLS);
+				                invalidReasons.get(0), null), StaticUtils.NO_CONTROLS);
 					}
 				}
 			}

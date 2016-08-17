@@ -62,7 +62,7 @@ public class Pegasus {
 	/**
 	 * Version string.
 	 */
-	public static final String ver = "0.25";
+	public static final String ver = "0.26";
 
 	/**
 	 * Kilobyte and Megabyte units.
@@ -98,6 +98,7 @@ public class Pegasus {
 
 	/**
 	 * Schema instance for validation of LDAP operations.
+	 * If <I>null</I>, then schema validation is disabled.
 	 */
 	public static Schema schema;
 	
@@ -373,13 +374,13 @@ public class Pegasus {
 
 									try {
 										if (Pegasus.schema == null) {
-											Pegasus.schema = Schema.getSchema(schema);
+											Pegasus.schema = Schema.getSchema(schemaItem);
 										}
 										else {
-											Pegasus.schema = Schema.mergeSchemas(Pegasus.schema, Schema.getSchema(schema));
+											Pegasus.schema = Schema.mergeSchemas(Pegasus.schema, Schema.getSchema(schemaItem));
 										}
 									} catch (LDIFException e) {
-										invalidSchemaFileList.add(schemaFile);
+										invalidSchemaFileList.add(schemaItem.getAbsolutePath());
 									}
 									
 								}
@@ -637,10 +638,13 @@ public class Pegasus {
 	public static String convertSchemaFile(String filename) throws IOException {
 	
 		SchemaReader schemaReader = new SchemaReader();
-		schemaReader.loadSchemaFile(new File(filename));
+		
+		File srcFile = new File(filename);
+		
+		schemaReader.loadSchemaFile(srcFile);
 		
 		String tmpDir = System.getProperty("java.io.tmpdir");
-		File tmpSchemaFile = new File(tmpDir + "/" + filename);
+		File tmpSchemaFile = new File(tmpDir + "/" + srcFile.getName());
 		FileWriter fileWriter = new FileWriter(tmpSchemaFile);
 		fileWriter.write(schemaReader.toLDIF());
 		fileWriter.close();

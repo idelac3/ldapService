@@ -18,6 +18,7 @@ public class JMenuBarMain extends JMenuBar {
 	public JMenuBarMain() {
 		add(new JMenuFile());
 		add(new JMenuLDIF());
+		add(new JMenuSchema());
 		add(new JMenuStatistic());
 		add(new JMenuDebug());			
 	}
